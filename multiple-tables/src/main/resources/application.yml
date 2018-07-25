@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: vertx-multiple-tables
+  
+appConfig :
+  port : 23456
+  headerContentType : content-type
+  headerApplicationJson : application/json; charset=utf-8
+  addressUser: samples.dataAccess.user
+  addressMarketInfo: samples.dataAccess.marketInfo
+  
+dbConfig:
+  url: jdbc:h2:mem:sample
+  driver_class: org.h2.Driver
+#  user: test
+#  password: easy1111
+  
