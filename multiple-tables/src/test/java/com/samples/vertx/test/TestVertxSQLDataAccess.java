@@ -1,8 +1,5 @@
 package com.samples.vertx.test;
 
-import java.time.Instant;
-import java.sql.Date;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +12,6 @@ import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import com.samples.vertx.AppConfig;
-import com.samples.vertx.ApplicationEntryPoint;
 import com.samples.vertx.dataaccess.model.User;
 
 @RunWith(SpringRunner.class)
@@ -36,7 +32,6 @@ public class TestVertxSQLDataAccess {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -59,7 +54,7 @@ public class TestVertxSQLDataAccess {
 		user.setId(1L);
 		user.setGroupId(1);
 		user.setName("Jon");
-		user.setCreationDate(new Date(new java.util.Date().getTime()));
+		user.setPassword("Sample01");
 		
 		return user;
 	}

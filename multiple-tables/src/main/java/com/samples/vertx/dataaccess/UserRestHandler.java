@@ -1,5 +1,6 @@
 package com.samples.vertx.dataaccess;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.samples.vertx.AppConfig;
@@ -22,6 +23,9 @@ public class UserRestHandler implements IRestHandler {
 	private Vertx vertx;
 	private AppConfig config;
 	
+	@Value("${message.ins.failed.internal-error}")
+	private String insFailedInternalErr;
+	
 	public UserRestHandler(AppConfig config, Vertx vertx){
 		this.config = config;
 		this.vertx = vertx;
@@ -34,12 +38,22 @@ public class UserRestHandler implements IRestHandler {
 		message.setOperation(DBOperations.insert);
 		vertx.eventBus().<JsonObject>send(config.getAddressUser(), JsonObject.mapFrom(message), next -> {
 			if(next.failed()){
-				context.response().setStatusCode(500);
+				context.response().setStatusCode(500).end(insFailedInternalErr);
 			} else {
-				context.response()
+				DataAccessMessage<User> returnedPayload = new DataAccessMessage<>(next.result().body());
+				if (returnedPayload.getFailure() != null && returnedPayload.getFailure().getMap() != null){
+					//log this
+					System.out.println(insFailedInternalErr+"\n"+returnedPayload.getFailure().getString
+							(DataAccessMessage.FAILURE_MESSAGE));
+					context.response().setStatusCode(500).end(insFailedInternalErr);
+				} else {
+					String returnedUser = Json.encodePrettily(returnedPayload.getModel()); 
+					System.out.println("Insert successful!\n"+returnedUser);
+					context.response()
 					.setStatusCode(201)
 					.putHeader(config.getHeaderContentType(), config.getHeaderApplicationJson())
-					.end(Json.encodePrettily(next.result()));
+					.end(returnedUser);
+				}
 			}
 		});
 		
@@ -74,7 +88,7 @@ public class UserRestHandler implements IRestHandler {
 	}
 	
 	public void update(RoutingContext context){
-		String unique = context.request().getParam("id");
+//		String unique = context.request().getParam("id");
 //		String sql = "UPDATE " + pflDataAccess.getTableName() + " SET " +
 //				"ProcessName=?, Description=?, Initiation=?, Tag=? WHERE id=" + unique;
 //		Process process = Json.decodeValue(context.getBodyAsString(), Process.class);

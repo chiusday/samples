@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 
 import com.samples.vertx.dataaccess.UserDataAccess;
 import com.samples.vertx.dataaccess.UserRestHandler;
-import com.samples.vertx.dataaccess.model.User;
 import com.samples.vertx.dataaccess.verticles.DataAccessInterchange;
 import com.samples.vertx.dataaccess.verticles.DataAccessRest;
 

@@ -48,7 +48,7 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 	public JsonArray toJsonArray(User model) {
 		JsonArray reply = new JsonArray();
 		JsonObject.mapFrom(model).stream().forEach(field -> {
-			reply.add(field.getValue());
+			if (field.getValue() != null) reply.add(field.getValue());
 		});
 		return reply;
 	}

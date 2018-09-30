@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties("dbConfig")
+@ConfigurationProperties("db-config")
 public class DBConfig {
 	private String url;
 	private String user;

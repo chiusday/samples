@@ -2,8 +2,6 @@ package com.samples.vertx.interfaces;
 
 import java.util.List;
 
-import com.samples.vertx.dataaccess.model.DataAccessMessage;
-
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;

@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @EnableConfigurationProperties
-@ConfigurationProperties(prefix="appConfig")
+@ConfigurationProperties(prefix="app-config")
 public class AppConfig {
 	private String port;
 	private String url;

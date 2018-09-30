@@ -1,14 +1,12 @@
 package com.samples.vertx.dataaccess.model;
 
-import java.sql.Date;
-
 import io.vertx.core.json.JsonObject;
 
 public class User {
 	private Long id;
 	private String name;
 	private int groupId;
-	private Date creationDate;
+	private String password;
 	
 	public User(){}
 	
@@ -16,7 +14,7 @@ public class User {
 		this.id = json.getLong("ID");
 		this.name = json.getString("NAME");
 		this.groupId = json.getInteger("GROUPID");
-		this.creationDate = Date.valueOf(json.getString("CREATIONDATE"));
+		this.password = json.getString("CREATIONDATE");
 	}
 	
 	public Long getId() {
@@ -37,10 +35,10 @@ public class User {
 	public void setGroupId(int groupId) {
 		this.groupId = groupId;
 	}
-	public Date getCreationDate() {
-		return creationDate;
+	public String getPassword() {
+		return password;
 	}
-	public void setCreationDate(Date creationDate) {
-		this.creationDate = creationDate;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

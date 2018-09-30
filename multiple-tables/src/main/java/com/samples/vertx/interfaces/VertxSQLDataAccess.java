@@ -3,7 +3,6 @@ package com.samples.vertx.interfaces;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.samples.vertx.AppConfig;
 import com.samples.vertx.DBConfig;
 import com.samples.vertx.dataaccess.model.DataAccessMessage;
 
@@ -208,7 +207,7 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 		this.jdbc.getConnection(asyncConn -> {
 			SQLConnection connection = asyncConn.result();
 			connection.execute("CREATE TABLE IF NOT EXISTS User (id BIGINT IDENTITY, name VARCHAR(100), " 
-				+ "groupId INTEGER, creationDate DATE)", 
+				+ "groupId INTEGER, password VARCHAR(32))", 
 				result -> {
 					if (result.failed()){
 						System.out.println("Create USER table failed");
@@ -240,7 +239,8 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 	protected boolean isTransactionFailed(AsyncResult next, DataAccessMessage daMessage){
 		if (next.failed()){
 			//failure json can be standardized
-			daMessage.setFailure(new JsonObject().put(DataAccessMessage.FAILURE_MESSAGE, next.cause()));
+			daMessage.setFailure(new JsonObject().put(DataAccessMessage.FAILURE_MESSAGE, 
+					next.cause().getMessage()));
 		}
 		return next.failed();
 	}
