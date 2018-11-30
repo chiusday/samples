@@ -203,21 +203,6 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 		});
 	}
 	
-	public void executeCreate(){
-		this.jdbc.getConnection(asyncConn -> {
-			SQLConnection connection = asyncConn.result();
-			connection.execute("CREATE TABLE IF NOT EXISTS User (id BIGINT IDENTITY, name VARCHAR(100), " 
-				+ "groupId INTEGER, password VARCHAR(32))", 
-				result -> {
-					if (result.failed()){
-						System.out.println("Create USER table failed");
-					} else {
-						System.out.println("Create USER table Successful");
-					}
-				});
-		});
-	}
-	
 	public void startBackend(Vertx vertx, Handler<AsyncResult<Void>> next){
 		this.jdbc = JDBCClient.createNonShared(vertx, this.config);
 

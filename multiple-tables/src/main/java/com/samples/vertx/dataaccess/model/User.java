@@ -14,7 +14,7 @@ public class User {
 		this.id = json.getLong("ID");
 		this.name = json.getString("NAME");
 		this.groupId = json.getInteger("GROUPID");
-		this.password = json.getString("CREATIONDATE");
+		this.password = json.getString("PASSWORD");
 	}
 	
 	public Long getId() {

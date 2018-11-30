@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: hasher
+
+  cloud:
+    config:
+      uri: http://localhost:40001/config-server
+
+  profiles:
+    active: sit
+
+server:
+  port: 30011
+  servlet:
+    context-path: /hasher
+    
+app-config:
+  shaAlgo: SHA-1

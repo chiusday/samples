@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 import com.samples.vertx.dataaccess.UserDataAccess;
@@ -15,6 +16,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 
 @SpringBootApplication
+@EnableFeignClients("com.samples.vertx.proxies")
 public class ApplicationEntryPoint {
 	public static final void main(String args[]){
 		SpringApplication.run(ApplicationEntryPoint.class, args);

@@ -2,6 +2,10 @@ spring:
   application:
     name: vertx-multiple-tables
   
+  cloud:
+    config:
+      uri: http://localhost:40001/config-server
+  
 app-config :
   port : 23456
   headerContentType : content-type

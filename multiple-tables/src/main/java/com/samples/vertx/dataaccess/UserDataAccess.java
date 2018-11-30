@@ -1,7 +1,11 @@
 package com.samples.vertx.dataaccess;
 
 import com.samples.vertx.interfaces.VertxSQLDataAccess;
+import com.samples.vertx.proxies.HasherProxy;
+import com.samples.vertx.proxies.model.HashingRequest;
+import com.samples.vertx.proxies.model.HashingResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.samples.vertx.DBConfig;
@@ -11,6 +15,7 @@ import com.samples.vertx.dataaccess.model.User;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.sql.SQLConnection;
 
 /**
  * Data access to User data.
@@ -35,6 +40,9 @@ import io.vertx.core.json.JsonObject;
 @Component
 public class UserDataAccess extends VertxSQLDataAccess<User> {
 
+	@Autowired
+	private HasherProxy hasher;
+	
 	public UserDataAccess(DBConfig config) {
 		super(User.class, config);
 	}
@@ -74,7 +82,9 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 	@Override
 	public void insert(Message<JsonObject> message){
 		DataAccessMessage<User> userMessage = new DataAccessMessage<>(message.body());
-		insert(userMessage.getModel(), next -> {
+		User user = userMessage.getModel();
+		user.setPassword(hashPassword(user.getPassword()));
+		insert(user, next -> {
 			if (isTransactionFailed(next, userMessage) == false){
 				userMessage.setModel(next.result());
 			}
@@ -104,4 +114,40 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 		});
 	}
 	
+	@Override
+	public void executeCreate(){
+		this.jdbc.getConnection(asyncConn -> {
+			SQLConnection connection = asyncConn.result();
+			connection.execute("CREATE TABLE IF NOT EXISTS "+ getTableName() 
+					+" (id BIGINT IDENTITY, name VARCHAR(100), " 
+					+ "groupId INTEGER, password VARCHAR(32))", 
+				result -> {
+					if (result.failed()){
+						System.out.println("Create USER table failed");
+					} else {
+						System.out.println("Create USER table Successful");
+						createDummyData(connection);
+					}
+				});
+		});
+	}
+	
+	private void createDummyData(SQLConnection connection){
+		String password = hashPassword("Password1");
+		connection.execute("INSERT INTO "+ getTableName()
+					+" (name, groupId, password)"
+					+" values('Jon', 1, '"+ password +"')", 
+				result -> {
+					if (result.failed()){
+						System.out.println("Create USER: 'Jon' failed");
+					} else {
+						System.out.println("Create USER: 'Jon' Successful");
+					}
+				});
+	}
+	
+	private String hashPassword(String text){
+		HashingResponse response = hasher.hash(new HashingRequest(text));
+		return response.getEncryptedText();
+	}
 }
