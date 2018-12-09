@@ -5,6 +5,8 @@ import com.samples.vertx.proxies.HasherProxy;
 import com.samples.vertx.proxies.model.HashingRequest;
 import com.samples.vertx.proxies.model.HashingResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.samples.vertx.DBConfig;
@@ -38,6 +40,7 @@ import io.vertx.ext.sql.SQLConnection;
  */
 //@Component
 public class UserDataAccess extends VertxSQLDataAccess<User> {
+	Logger log = LoggerFactory.getLogger(UserDataAccess.class);
 
 	@Autowired
 	private HasherProxy hasher;
@@ -146,7 +149,9 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 	}
 	
 	private String hashPassword(String text){
+		log.info("calling hasher with: {}", text);
 		HashingResponse response = hasher.hash(new HashingRequest(text));
+		log.info("hasher returned with: {}", response.getEncryptedText());
 		return response.getEncryptedText();
 	}
 }

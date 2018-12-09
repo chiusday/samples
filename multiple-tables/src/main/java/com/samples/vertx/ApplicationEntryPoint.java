@@ -4,6 +4,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
@@ -12,10 +13,12 @@ import com.samples.vertx.dataaccess.UserRestHandler;
 import com.samples.vertx.dataaccess.verticles.DataAccessInterchange;
 import com.samples.vertx.dataaccess.verticles.DataAccessRest;
 
+import brave.sampler.Sampler;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 
 @SpringBootApplication
+@EnableDiscoveryClient
 @EnableFeignClients("com.samples.vertx.proxies")
 public class ApplicationEntryPoint {
 	public static final void main(String args[]){
@@ -61,4 +64,8 @@ public class ApplicationEntryPoint {
 		return new UserRestHandler(appConfig(), dataAccessInterchange().getVertx());
 	}
 	
+	@Bean
+	public Sampler defaultSampler(){
+		return Sampler.ALWAYS_SAMPLE;
+	}
 }

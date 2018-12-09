@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.samples.vertx.proxies.model.HashingRequest;
 import com.samples.vertx.proxies.model.HashingResponse;
 
-@FeignClient(name="hasher")
+@FeignClient(name="zuul-gateway")
 @RibbonClient(name="hasher")
 public interface HasherProxy {
 
-	@PostMapping("/hasher/hash")
+	@PostMapping("/zuul-gateway/hasher/hasher/hash")
 	public HashingResponse hash(@RequestBody HashingRequest request);
 
 }

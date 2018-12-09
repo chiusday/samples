@@ -3,8 +3,7 @@ server:
   servlet:
     context-path: /samples
     
-spring:
-  logging:
-    level:
-      org.springframework.web: debug
-      org.springframework.security: debug
+logging:
+  level:
+    org.springframework.web: debug
+    org.springframework.security: debug

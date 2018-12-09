@@ -30,6 +30,7 @@ public class HasherController {
 		try {
 			String hashed = hashService.hash(request.getOriginalText());
 			response.setEncryptedText(hashed);
+			LOG.info("returning: {}", hashed);
 			return response;
 		} catch (NoSuchAlgorithmException noSuchAlgo){
 			LOG.error(config.getShaAlgo() + "is not a valid algorithm",
