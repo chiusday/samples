@@ -7,8 +7,6 @@ spring:
   jackson:
     date-format: "yyyy-MM-dd'T'HH:mm:ss.SSS"
 
-hasher.ribbon.listOfServers:http://localhost:31012,http://localhost:31112
-  
 app-config :
   port : 23456
   headerContentType : content-type
