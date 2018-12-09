@@ -6,7 +6,6 @@ import com.samples.vertx.proxies.model.HashingRequest;
 import com.samples.vertx.proxies.model.HashingResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.samples.vertx.DBConfig;
 import com.samples.vertx.dataaccess.model.DataAccessMessage;
@@ -37,7 +36,7 @@ import io.vertx.ext.sql.SQLConnection;
  *
  * @param <User>
  */
-@Component
+//@Component
 public class UserDataAccess extends VertxSQLDataAccess<User> {
 
 	@Autowired

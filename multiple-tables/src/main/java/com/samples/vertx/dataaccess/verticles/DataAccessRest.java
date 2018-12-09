@@ -55,7 +55,7 @@ public class DataAccessRest extends AbstractVerticle {
 		Router router = setupEndpoints();
 
 		vertx.createHttpServer()
-			.requestHandler(router::accept)
+			.requestHandler(router)
 			.listen(config.getInteger("http.port", 8896),
 					http::handle);
 		

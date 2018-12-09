@@ -1,7 +1,6 @@
 package com.samples.vertx.dataaccess.verticles;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.samples.vertx.AppConfig;
 import com.samples.vertx.dataaccess.DataAccessMessageRouter;
@@ -10,7 +9,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 
-@Component
+//@Component
 public class DataAccessInterchange extends AbstractVerticle {
 	private AppConfig config;
 	

@@ -1,5 +1,6 @@
 package com.samples.vertx.test;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 import com.samples.vertx.AppConfig;
@@ -43,10 +43,10 @@ public class TestVertxSQLDataAccess {
 		System.out.println("About to call the rest handler");
 		ResponseEntity<User> inserted = rest.postForEntity(userUrl, user, User.class);
 		//System.out.println("inserted status code: " + inserted.getStatusCode());
-		Assert.isTrue(inserted.getStatusCode().equals(HttpStatus.CREATED));
+		Assert.assertTrue(inserted.getStatusCode().equals(HttpStatus.CREATED));
 		ResponseEntity<User> entity = rest.getForEntity(userUrl+"/1", User.class);
-		Assert.isTrue(entity.getStatusCode().equals(HttpStatus.OK));
-		Assert.isTrue(entity.getBody().getName().equals(user.getName()));
+		Assert.assertTrue(entity.getStatusCode().equals(HttpStatus.OK));
+		Assert.assertTrue(entity.getBody().getName().equals(user.getName()));
 	}
 	
 	private User createUserModel(){

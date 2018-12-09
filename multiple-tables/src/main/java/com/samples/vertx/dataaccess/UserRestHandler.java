@@ -1,7 +1,6 @@
 package com.samples.vertx.dataaccess;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import com.samples.vertx.AppConfig;
 import com.samples.vertx.dataaccess.model.DataAccessMessage;
@@ -18,7 +17,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
-@Component
+//@Component
 public class UserRestHandler implements IRestHandler {
 	private Vertx vertx;
 	private AppConfig config;

@@ -10,7 +10,6 @@ spring:
     active: sit
 
 server:
-  port: 30011
   servlet:
     context-path: /hasher
     
