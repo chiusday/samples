@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: vertx-multiple-tables
+
+server:
+  port: 31011
+  servlet:
+    context-path: /vertxrx
+  
+logging:
+  level:
+    com.netflix: debug
+
+app-config :
+  port : 31011
+  headerContentType : content-type
+  headerApplicationJson : application/json; charset=utf-8
+  addressUser: samples.dataAccess.user
+  addressMarketInfo: samples.dataAccess.marketInfo
+  
+db-config:
+  url: jdbc:h2:mem:sample
+  driver_class: org.h2.Driver
+#  user: test
+#  password: easy1111
+  
+message:
+  ins:
+    failed:
+      internal-error: Creation failed due to internal error.
+
