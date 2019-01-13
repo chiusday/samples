@@ -46,8 +46,6 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 	/**
 	 *  
 	 *  Returns io.vertx.core.json.JsonArray containing all the fields of the model.
-	 * 	The sequence they are added to the Array should be exactly the same
-	 * 	as the sequence of the table columns 
 	 * @param T
 	 * @return JsonArray
 	 */
@@ -213,15 +211,6 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 		} else {
 			System.out.println("JDBC connection successfully established");
 		}
-//		this.jdbc.getConnection(result -> {
-//			if (result.failed()){
-//				System.out.println("JDBC exception:\n" + result.cause());
-//			} else {
-//				System.out.println("JDBC connection successfully established");
-//				result.result().close();
-//				next.handle(Future.<Void>succeededFuture());
-//			}
-//		});
 	}
 	
 	public void cleanUp(){

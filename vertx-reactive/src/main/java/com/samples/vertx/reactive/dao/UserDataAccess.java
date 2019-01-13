@@ -24,6 +24,27 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 	}
 
 	@Override
+	protected String getTableName() {
+		return "User";
+	}
+
+	@Override
+	public JsonArray toJsonArray(User model) {
+		return new JsonArray()
+				.add(model.getId())
+				.add(model.getName())
+				.add(model.getGroupId())
+				.add(model.getPassword());
+	}
+
+	@Override
+	public JsonArray noKeyJsonArray(User model) {
+		JsonArray array = toJsonArray(model);
+		array.remove(0);
+		return array;
+	}
+
+	@Override
 	public void executeCreate() {
 		String s = "CREATE TABLE IF NOT EXISTS "+ getTableName() 
 		+" (id BIGINT IDENTITY, name VARCHAR(100), " 
@@ -35,7 +56,8 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 				return result.doAfterTerminate(conn::close);
 			})
 			.subscribe(result -> {
-				log.info("Result >> " + JsonObject.mapFrom(result).encode());
+				log.info("Create table " +getTableName()+ "\nResult >> " 
+						+ JsonObject.mapFrom(result).encode());
 			}, error -> {
 				log.error("Error creating table "+getTableName()+"\n"+error.getMessage());
 			});
@@ -54,13 +76,18 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 	}
 
 	@Override
-	public void delete(Message<JsonObject> message) {
-		// TODO Auto-generated method stub
-		
+	public void select(Message<JsonObject> message) {
+		DataAccessMessage<User> userMessage = new DataAccessMessage<>(message.body());
+		select(userMessage.getCriteria(), userMessage.getParameters(), next -> {
+			if (isTransactionFailed(next, userMessage) == false){
+				userMessage.setRecords(next.result());
+			}
+			message.reply(JsonObject.mapFrom(userMessage));
+		});
 	}
 
 	@Override
-	public void select(Message<JsonObject> message) {
+	public void delete(Message<JsonObject> message) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -69,24 +96,6 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 	public void update(Message<JsonObject> message) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	protected String getTableName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public JsonArray toJsonArray(User model) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public JsonArray noKeyJsonArray(User model) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

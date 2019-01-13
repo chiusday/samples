@@ -107,9 +107,16 @@ public class DataAccessMessage<T> {
 	 * Database records. Used in:
 	 * select
 	 * @return
+	 * 	ResultSet returned by executing the DBOperation
 	 */
 	public List<JsonObject> getRecords(){ return this.records; }
-	public void setRecords(List<JsonObject> records){ this.records = records; }
+	@SuppressWarnings("unchecked")
+	public void setRecords(List<JsonObject> records){
+		this.records = records; 
+		if (!records.isEmpty()) {
+			this.setModel((T)records.get(0));
+		}
+	}
 	
 	/**
 	 * Database records. Used in:

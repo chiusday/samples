@@ -1,11 +1,17 @@
 package com.samples.vertx.reactive.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 import io.vertx.core.json.JsonObject;
 
 public class User {
+	@JsonAlias("ID")
 	private Long id;
+	@JsonAlias("NAME")
 	private String name;
+	@JsonAlias("GROUPID")
 	private int groupId;
+	@JsonAlias("PASSWORD")
 	private String password;
 	
 	public User(){}

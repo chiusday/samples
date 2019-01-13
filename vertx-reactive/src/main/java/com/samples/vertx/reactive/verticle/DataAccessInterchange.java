@@ -1,5 +1,7 @@
 package com.samples.vertx.reactive.verticle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -8,10 +10,13 @@ import com.samples.vertx.reactive.service.DataAccessMessageRouter;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.AbstractVerticle;
+import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.core.eventbus.Message;
 
 @Component
 public class DataAccessInterchange extends AbstractVerticle {
+	private Logger log = LoggerFactory.getLogger(DataAccessInterchange.class);
+	
 	@Autowired
 	private AppConfig appConfig;
 	
@@ -26,7 +31,13 @@ public class DataAccessInterchange extends AbstractVerticle {
 			.toFlowable().subscribe(this::processRequest);
 	}
 	
-	private void processRequest(final Message<JsonObject> message){
+	public Vertx getRxVertx() {
+		return vertx;
+	}
+	
+	private void processRequest(Message<JsonObject> message){
+		log.debug("About to route message >> " + JsonObject.mapFrom(message.body())
+			.encodePrettily());
 		messageRouter.routeMessage(message);
 	}
 }
