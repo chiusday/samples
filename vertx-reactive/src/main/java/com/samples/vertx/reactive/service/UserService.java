@@ -24,16 +24,9 @@ public class UserService {
 	private DataAccessInterchange dataAccessInterchange;
 	
 	public UserDataResponse add(User user) {
-//		UserAddResponse userDataResponse = new UserAddResponse();
 		DataAccessMessage<User> userDAMessage = new DataAccessMessage<>(User.class);
 		userDAMessage.setModel(user);
 		userDAMessage.setOperation(DBOperations.insert);
-//		EventBus eventBus = dataAccessInterchange.getRxVertx().eventBus();
-//		Single<Message<JsonObject>> response = eventBus.<JsonObject>rxSend
-//				(appConfig.getAddressUser(), JsonObject.mapFrom(userDAMessage));
-//		userDataResponse.setSingle(response);
-//		
-//		return userDataResponse;
 		
 		return processUser(userDAMessage);
 	}
@@ -43,6 +36,14 @@ public class UserService {
 		userDAMessage.setCriteria("id=?");
 		userDAMessage.setParameters(new JsonArray().add(id));
 		userDAMessage.setOperation(DBOperations.select);
+		
+		return processUser(userDAMessage);
+	}
+	
+	public UserDataResponse update(User user) {
+		DataAccessMessage<User> userDAMessage = new DataAccessMessage<>(User.class);
+		userDAMessage.setModel(user);
+		userDAMessage.setOperation(DBOperations.update);
 		
 		return processUser(userDAMessage);
 	}

@@ -9,6 +9,7 @@ import com.samples.vertx.reactive.model.DataAccessMessage;
 import com.samples.vertx.reactive.model.User;
 import com.samples.vertx.reactive.visitor.model.UserDataResponse;
 
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.eventbus.Message;
 
@@ -27,8 +28,7 @@ public interface UserDataResponseVisitor extends IVisitor {
 	default void visit(UserDataResponse userDataResp) {
 		try {
 			Message<JsonObject> message = userDataResp.getSingle().blockingGet();
-			log.debug("Message recieved >> \n" + JsonObject.mapFrom(message.body())
-				.encodePrettily());
+			log.debug("Message recieved >> \n" + Json.encodePrettily(message.body()));
 			DataAccessMessage<User> userPayload = new DataAccessMessage<>(message.body());
 			if (userPayload.getFailure() != null && userPayload.getFailure().getMap() != null){
 				userDataResp.setHasError(true);
@@ -40,7 +40,7 @@ public interface UserDataResponseVisitor extends IVisitor {
 				userDataResp.setHasError(false);
 				userDataResp.setResponseEntity(getResponseEntity(userPayload));
 				log.info(getResultMessage()+"\n"+ (userDataResp.getModel() == null ? "{}" :
-						JsonObject.mapFrom(userDataResp.getModel()).encode()));
+						Json.encodePrettily(userDataResp.getModel())));
 			}
 		} catch (Exception e) {
 			userDataResp.setHasError(true);

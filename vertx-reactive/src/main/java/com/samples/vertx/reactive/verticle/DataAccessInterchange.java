@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.samples.vertx.reactive.AppConfig;
 import com.samples.vertx.reactive.service.DataAccessMessageRouter;
 
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.AbstractVerticle;
 import io.vertx.reactivex.core.Vertx;
@@ -36,8 +37,7 @@ public class DataAccessInterchange extends AbstractVerticle {
 	}
 	
 	private void processRequest(Message<JsonObject> message){
-		log.debug("About to route message >> " + JsonObject.mapFrom(message.body())
-			.encodePrettily());
+		log.debug("About to route message >> " + Json.encodePrettily(message.body()));
 		messageRouter.routeMessage(message);
 	}
 }

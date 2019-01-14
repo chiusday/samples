@@ -26,8 +26,9 @@ message:
     internal-error: Operation failed due to internal error.
     internal-error.ins: Creation failed due to internal error.
     internal-error.get: Get failed due to internal error.
-    
+    internal-error.upd: Update failed due to internal error.    
   success: Operation successful!
   success.ins: Insert successful!
   success.get: Get successful!
+  success.upd: Update successful!
   

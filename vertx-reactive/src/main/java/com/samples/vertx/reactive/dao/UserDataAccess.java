@@ -87,13 +87,22 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 	}
 
 	@Override
-	public void delete(Message<JsonObject> message) {
-		// TODO Auto-generated method stub
-		
+	public void update(Message<JsonObject> message) {
+		DataAccessMessage<User> msgUser = new DataAccessMessage<>(message.body());
+		msgUser.setKey(msgUser.getModel().getId().toString());
+		String sql = "UPDATE "+getTableName()+" SET "
+				+ "name=?, groupId=?, password=? "
+				+ "WHERE id="+msgUser.getKey();
+		update(msgUser.getKey(), sql, msgUser.getModel(), next -> {
+			if (isTransactionFailed(next, msgUser) == false) {
+				msgUser.setModel(next.result());
+			}
+			message.reply(JsonObject.mapFrom(msgUser));
+		});
 	}
 
 	@Override
-	public void update(Message<JsonObject> message) {
+	public void delete(Message<JsonObject> message) {
 		// TODO Auto-generated method stub
 		
 	}

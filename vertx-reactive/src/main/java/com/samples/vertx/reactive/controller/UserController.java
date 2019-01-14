@@ -6,12 +6,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.samples.vertx.reactive.model.User;
 import com.samples.vertx.reactive.service.UserService;
 import com.samples.vertx.reactive.visitor.UserAddResponseVisitor;
 import com.samples.vertx.reactive.visitor.UserGetResponseVisitor;
+import com.samples.vertx.reactive.visitor.UserUpdateResponseVisitor;
 import com.samples.vertx.reactive.visitor.model.UserDataResponse;
 
 @Controller
@@ -25,6 +27,9 @@ public class UserController {
 	@Autowired
 	private UserGetResponseVisitor userGetResponseVisitor;
 	
+	@Autowired
+	private UserUpdateResponseVisitor userUpdateResponseVisitor;
+	
 	@PostMapping("/user")
 	public ResponseEntity<Object> insertUser(@RequestBody User user){
 		UserDataResponse userOpResponse = userService.add(user);
@@ -37,6 +42,14 @@ public class UserController {
 	public ResponseEntity<Object> getUser(@PathVariable int id){
 		UserDataResponse userOpResponse = userService.get(id);
 		userOpResponse.accept(userGetResponseVisitor);
+		
+		return userOpResponse.getResponseEntity();
+	}
+	
+	@PutMapping("/user")
+	public ResponseEntity<Object> update(@RequestBody User user){
+		UserDataResponse userOpResponse = userService.update(user);
+		userOpResponse.accept(userUpdateResponseVisitor);
 		
 		return userOpResponse.getResponseEntity();
 	}
