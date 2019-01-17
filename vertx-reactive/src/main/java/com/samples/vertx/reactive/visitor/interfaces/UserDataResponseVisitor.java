@@ -33,7 +33,7 @@ public interface UserDataResponseVisitor extends IVisitor {
 			if (userPayload.getFailure() != null && userPayload.getFailure().getMap() != null){
 				userDataResp.setHasError(true);
 				userDataResp.setResponseEntity(getResponseEntity(userPayload));
-				log.error(getErrorMessage()+"\n"+userPayload.getFailure().getString
+				log.error(userPayload.getFailure().getString
 						(DataAccessMessage.FAILURE_MESSAGE));
 			} else {
 				userDataResp.setModel(getModel(userPayload));

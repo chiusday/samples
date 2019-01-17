@@ -34,8 +34,8 @@ public class UserGetResponseVisitor implements UserDataResponseVisitor {
 	@Override
 	public ResponseEntity<Object> getResponseEntity(DataAccessMessage<User> message) {
 		return new ResponseEntity<>
-			(getModel(message)==null ? this.currentMessage : message.getModel(), 
-					httpStatus);
+			(getModel(message)==null ? getResultMessage() : message.getModel(), 
+					this.httpStatus);
 	}
 	
 	@Override

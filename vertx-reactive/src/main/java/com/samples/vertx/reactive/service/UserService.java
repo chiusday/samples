@@ -48,6 +48,14 @@ public class UserService {
 		return processUser(userDAMessage);
 	}
 	
+	public UserDataResponse delete(User user) {
+		DataAccessMessage<User> userDAMessage = new DataAccessMessage<>(User.class);
+		userDAMessage.setModel(user);
+		userDAMessage.setOperation(DBOperations.delete);
+		
+		return processUser(userDAMessage);
+	}
+	
 	private UserDataResponse processUser(DataAccessMessage<User> userDAMessage) {
 		UserDataResponse userDataResponse = new UserDataResponse();
 		EventBus eventBus = dataAccessInterchange.getRxVertx().eventBus();

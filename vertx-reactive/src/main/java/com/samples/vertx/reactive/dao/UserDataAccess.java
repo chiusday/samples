@@ -103,8 +103,15 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 
 	@Override
 	public void delete(Message<JsonObject> message) {
-		// TODO Auto-generated method stub
+		DataAccessMessage<User> msgUser = new DataAccessMessage<>(message.body());
+		msgUser.setCriteria("id="+msgUser.getModel().getId().toString());
 		
+		delete("id=?", new JsonArray().add(msgUser.getModel().getId().toString()), 
+			next -> {
+				if (isTransactionFailed(next, msgUser) == false) {
+					msgUser.setAffectedRecords(next.result());
+				}
+				message.reply(JsonObject.mapFrom(msgUser));
+			});
 	}
-
 }

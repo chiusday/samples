@@ -68,20 +68,6 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 	}
 
 	/**
-	 * Deletes a single record identified by the given key
-	 * @param key - unique record identifier
-	 * @param next - Async Result
-	 */
-	public void delete(String key, Handler<AsyncResult<Integer>> next) {
-		this.jdbc.getConnection(asyncSQLConn -> {
-			SQLConnection connection = asyncSQLConn.result();
-			connection.update(DELETE_PREFIX + " 1="+ key, deleteResult -> {
-				this.deleteResponse(deleteResult, connection, next);
-			});
-		});
-	}
-
-	/**
 	 * Deletes multiple records based on the criteria Statement passed
 	 * @param criteria - WHERE clause criteria to execute with '?' place holder for values. 
 	 * @param parameters - JsonArray containing the values to replace '?' in the criteria statement. 

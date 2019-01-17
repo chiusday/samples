@@ -21,12 +21,6 @@ public interface IVertxSQLDataAccess<T> {
 	void insert(T model,  Handler<AsyncResult<T>> next); 
 	
 	void delete(Message<JsonObject> message);
-	/**
-	 * Deletes a single record identified by the given key
-	 * @param key - unique record identifier
-	 * @param next - Async Result
-	 */
-	void delete(String key, Handler<AsyncResult<Integer>> next); 
 
 	/**
 	 * Deletes multiple records based on the SQL Statement passed
