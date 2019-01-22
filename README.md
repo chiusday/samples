@@ -1,4 +1,9 @@
 # samples
+### vertx-reactive
+This is a reactive version of multiple-tables project.
+RxJava is used to avoid nesting too many aynchronous handlers.
+Visitor pattern is also used to show how it can greatly increase versatility
+
 ### springboot-angular:
 This project shows how to build a single jar file that has both your backend spring boot services with angular front end. 
 It downloads npm and node.js then builds your angular project. This is useful when you have to deploy the complete application (with angular UI) in a server that doesn’t have npm installed or internet access, which in my experience they almost always don’t
