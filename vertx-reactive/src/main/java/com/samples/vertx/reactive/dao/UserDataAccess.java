@@ -30,11 +30,11 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 
 	@Override
 	public JsonArray toJsonArray(User model) {
-		return new JsonArray()
-				.add(model.getId())
-				.add(model.getName())
-				.add(model.getGroupId())
-				.add(model.getPassword());
+		JsonArray reply = new JsonArray();
+		JsonObject.mapFrom(model).stream().forEach(field -> {
+			if (field.getValue() != null) reply.add(field.getValue());
+		});
+		return reply;
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import com.samples.vertx.reactive.visitor.UserAddResponseVisitor;
 import com.samples.vertx.reactive.visitor.UserDeleteResponseVisitor;
 import com.samples.vertx.reactive.visitor.UserGetResponseVisitor;
 import com.samples.vertx.reactive.visitor.UserUpdateResponseVisitor;
-import com.samples.vertx.reactive.visitor.model.UserDataResponse;
+import com.samples.vertx.reactive.visitor.model.RxResponse;
 
 @Controller
 public class UserController {
@@ -37,7 +37,7 @@ public class UserController {
 	
 	@PostMapping("/user")
 	public ResponseEntity<Object> insertUser(@RequestBody User user){
-		UserDataResponse userOpResponse = userService.add(user);
+		RxResponse<User> userOpResponse = userService.add(user);
 		userOpResponse.accept(userAddResponseVisitor);
 		
 		return userOpResponse.getResponseEntity();
@@ -45,7 +45,7 @@ public class UserController {
 
 	@GetMapping("/user/{id}")
 	public ResponseEntity<Object> getUser(@PathVariable int id){
-		UserDataResponse userOpResponse = userService.get(id);
+		RxResponse<User> userOpResponse = userService.get(id);
 		userOpResponse.accept(userGetResponseVisitor);
 		
 		return userOpResponse.getResponseEntity();
@@ -53,7 +53,7 @@ public class UserController {
 	
 	@PutMapping("/user")
 	public ResponseEntity<Object> update(@RequestBody User user){
-		UserDataResponse userOpResponse = userService.update(user);
+		RxResponse<User> userOpResponse = userService.update(user);
 		userOpResponse.accept(userUpdateResponseVisitor);
 		
 		return userOpResponse.getResponseEntity();
@@ -63,7 +63,7 @@ public class UserController {
 	public ResponseEntity<Object> delete(@PathVariable int id){
 		User user = new User();
 		user.setId(new Long(id));
-		UserDataResponse userOpResponse = userService.delete(user);
+		RxResponse<User> userOpResponse = userService.delete(user);
 		userOpResponse.accept(userDeleteResponseVisitor);
 		
 		return userOpResponse.getResponseEntity();

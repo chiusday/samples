@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 
 import com.samples.vertx.reactive.model.DataAccessMessage;
 import com.samples.vertx.reactive.model.User;
-import com.samples.vertx.reactive.visitor.interfaces.UserDataResponseVisitor;
+import com.samples.vertx.reactive.visitor.interfaces.IRxResponseVisitor;
 
 @Component
-public class UserDeleteResponseVisitor implements UserDataResponseVisitor {
+public class UserDeleteResponseVisitor implements IRxResponseVisitor<User> {
 
 	@Value("${message.failed.internal-error.del}")
 	private String errorMessage;
@@ -19,12 +19,12 @@ public class UserDeleteResponseVisitor implements UserDataResponseVisitor {
 	private String successMessage;
 	
 	@Override
-	public String getErrorMessage() {
+	public String getErrorText() {
 		return errorMessage;
 	}
 
 	@Override
-	public String getResultMessage() {
+	public String getResultText() {
 		return successMessage;
 	}
 
@@ -34,7 +34,7 @@ public class UserDeleteResponseVisitor implements UserDataResponseVisitor {
 			return new ResponseEntity<Object>(message.getFailure().getString
 					(DataAccessMessage.FAILURE_MESSAGE), HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<Object>(getResultMessage(), HttpStatus.OK);
+		return new ResponseEntity<Object>(getResultText(), HttpStatus.OK);
 	}
 
 }

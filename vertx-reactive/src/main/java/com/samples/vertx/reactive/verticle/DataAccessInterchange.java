@@ -30,6 +30,9 @@ public class DataAccessInterchange extends AbstractVerticle {
 		messageRouter.setDataConnections(vertx);
 		vertx.eventBus().<JsonObject>consumer(appConfig.getAddressUser())
 			.toFlowable().subscribe(this::processRequest);
+		
+		vertx.eventBus().<JsonObject>consumer(appConfig.getAddressMarketInfo())
+			.toFlowable().subscribe(this::processRequest);
 	}
 	
 	public Vertx getRxVertx() {

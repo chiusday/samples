@@ -8,7 +8,7 @@ import com.samples.vertx.reactive.enums.DBOperations;
 import com.samples.vertx.reactive.model.DataAccessMessage;
 import com.samples.vertx.reactive.model.User;
 import com.samples.vertx.reactive.verticle.DataAccessInterchange;
-import com.samples.vertx.reactive.visitor.model.UserDataResponse;
+import com.samples.vertx.reactive.visitor.model.RxResponse;
 
 import io.reactivex.Single;
 import io.vertx.core.json.JsonArray;
@@ -23,7 +23,7 @@ public class UserService {
 	@Autowired
 	private DataAccessInterchange dataAccessInterchange;
 	
-	public UserDataResponse add(User user) {
+	public RxResponse<User> add(User user) {
 		DataAccessMessage<User> userDAMessage = new DataAccessMessage<>(User.class);
 		userDAMessage.setModel(user);
 		userDAMessage.setOperation(DBOperations.insert);
@@ -31,7 +31,7 @@ public class UserService {
 		return processUser(userDAMessage);
 	}
 	
-	public UserDataResponse get(int id) {
+	public RxResponse<User> get(int id) {
 		DataAccessMessage<User> userDAMessage = new DataAccessMessage<>(User.class);
 		userDAMessage.setCriteria("id=?");
 		userDAMessage.setParameters(new JsonArray().add(id));
@@ -40,7 +40,7 @@ public class UserService {
 		return processUser(userDAMessage);
 	}
 	
-	public UserDataResponse update(User user) {
+	public RxResponse<User> update(User user) {
 		DataAccessMessage<User> userDAMessage = new DataAccessMessage<>(User.class);
 		userDAMessage.setModel(user);
 		userDAMessage.setOperation(DBOperations.update);
@@ -48,7 +48,7 @@ public class UserService {
 		return processUser(userDAMessage);
 	}
 	
-	public UserDataResponse delete(User user) {
+	public RxResponse<User> delete(User user) {
 		DataAccessMessage<User> userDAMessage = new DataAccessMessage<>(User.class);
 		userDAMessage.setModel(user);
 		userDAMessage.setOperation(DBOperations.delete);
@@ -56,8 +56,8 @@ public class UserService {
 		return processUser(userDAMessage);
 	}
 	
-	private UserDataResponse processUser(DataAccessMessage<User> userDAMessage) {
-		UserDataResponse userDataResponse = new UserDataResponse();
+	private RxResponse<User> processUser(DataAccessMessage<User> userDAMessage) {
+		RxResponse<User> userDataResponse = new RxResponse<>();
 		EventBus eventBus = dataAccessInterchange.getRxVertx().eventBus();
 		Single<Message<JsonObject>> response = eventBus.<JsonObject>rxSend
 				(appConfig.getAddressUser(), JsonObject.mapFrom(userDAMessage));

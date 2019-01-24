@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 
 import com.samples.vertx.reactive.model.DataAccessMessage;
 import com.samples.vertx.reactive.model.User;
-import com.samples.vertx.reactive.visitor.interfaces.UserDataResponseVisitor;
+import com.samples.vertx.reactive.visitor.interfaces.IRxResponseVisitor;
 
 @Component
-public class UserUpdateResponseVisitor implements UserDataResponseVisitor {
+public class UserUpdateResponseVisitor implements IRxResponseVisitor<User> {
 	
 	@Value("${message.failed.internal-error.upd}")
 	private String errorMessage;
@@ -19,12 +19,12 @@ public class UserUpdateResponseVisitor implements UserDataResponseVisitor {
 	private String successMessage;
 	
 	@Override
-	public String getErrorMessage() {
+	public String getErrorText() {
 		return errorMessage;
 	}
 
 	@Override
-	public String getResultMessage() {
+	public String getResultText() {
 		return successMessage;
 	}
 

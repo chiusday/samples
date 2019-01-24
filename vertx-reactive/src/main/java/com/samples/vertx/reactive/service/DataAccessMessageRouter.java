@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.samples.vertx.reactive.enums.DBOperations;
 import com.samples.vertx.reactive.interfaces.IVertxSQLDataAccess;
 import com.samples.vertx.reactive.model.DataAccessMessage;
+import com.samples.vertx.reactive.model.Ticker;
 import com.samples.vertx.reactive.model.User;
 
 import io.vertx.reactivex.core.Vertx;
@@ -20,6 +21,8 @@ public class DataAccessMessageRouter {
 
 	@Autowired
 	private IVertxSQLDataAccess<User> userDataAccess;
+	@Autowired
+	private IVertxSQLDataAccess<Ticker> tickerDAO;
 	
 	private Map<Class<?>, IVertxSQLDataAccess<?>> operators = 
 			new ConcurrentHashMap<Class<?>, IVertxSQLDataAccess<?>>();
@@ -38,6 +41,7 @@ public class DataAccessMessageRouter {
 	public void setDataConnections(final Vertx vertx){
 		//build list of data access implementors
 		operators.put(User.class, userDataAccess);
+		operators.put(Ticker.class, tickerDAO);
 
 		//establish db connection for each
 		//this a good use case for an observable interface
@@ -45,7 +49,6 @@ public class DataAccessMessageRouter {
 			daImplementor.startBackend(vertx);
 			daImplementor.executeCreate();
 		});
-		
 	}
 
 	public void routeMessage(final Message<JsonObject> message){

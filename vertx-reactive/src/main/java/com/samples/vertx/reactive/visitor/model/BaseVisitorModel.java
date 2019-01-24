@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 
 import com.samples.vertx.reactive.visitor.interfaces.IVisitorModel;
 
-public abstract class BaseVisitorModel<T> implements IVisitorModel {
+public abstract class BaseVisitorModel<T> implements IVisitorModel<T> {
 	protected Type type;
 	protected T model;
 	protected boolean hasError;

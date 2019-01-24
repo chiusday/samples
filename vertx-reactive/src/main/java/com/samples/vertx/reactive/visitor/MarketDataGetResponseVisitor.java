@@ -6,24 +6,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.samples.vertx.reactive.model.DataAccessMessage;
-import com.samples.vertx.reactive.model.User;
+import com.samples.vertx.reactive.model.Ticker;
 import com.samples.vertx.reactive.visitor.interfaces.IRxResponseVisitor;
 
 @Component
-public class UserGetResponseVisitor implements IRxResponseVisitor<User> {
-	
+public class MarketDataGetResponseVisitor implements IRxResponseVisitor<Ticker> {
+
 	@Value("${message.failed.internal-error.get}")
-	private String errorMessage;
+	private String errorText;
 	
 	@Value("${message.success.get}")
-	private String successMessage;
+	private String successText;
 	
 	private HttpStatus httpStatus = HttpStatus.OK;
 	private String currentMessage;
 	
 	@Override
 	public String getErrorText() {
-		return this.errorMessage;
+		return this.errorText;
 	}
 
 	@Override
@@ -32,22 +32,22 @@ public class UserGetResponseVisitor implements IRxResponseVisitor<User> {
 	}
 
 	@Override
-	public ResponseEntity<Object> getResponseEntity(DataAccessMessage<User> message) {
+	public ResponseEntity<Object> getResponseEntity(DataAccessMessage<Ticker> message) {
 		return new ResponseEntity<>
 			(getModel(message)==null ? getResultText() : message.getModel(), 
-					this.httpStatus);
+				this.httpStatus);
 	}
-	
+
 	@Override
-	public User getModel(DataAccessMessage<User> messageUser) {
-		if (messageUser.getRecords().isEmpty()) {
+	public Ticker getModel(DataAccessMessage<Ticker> messageTicker) {
+		if (messageTicker.getRecords().isEmpty()) {
 			this.currentMessage = "Record not found.";
 			httpStatus = HttpStatus.NOT_FOUND;
 		} else {
-			this.currentMessage = this.successMessage;
+			this.currentMessage = this.successText;
 			httpStatus = HttpStatus.OK;
 		}
 		
-		return messageUser.getModel();
+		return messageTicker.getModel();		
 	}
 }
