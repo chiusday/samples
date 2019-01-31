@@ -13,3 +13,10 @@ app-config:
   symbol: symbol=
   apiKey: apikey=demo
   
+returned-data:
+  timeSeries:
+    daily: Time Series (Daily)
+    weekly: Weekly Time Series
+    monthly: Monthly Time Series
+    
+  

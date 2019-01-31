@@ -8,8 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.samples.market.helper.QuoteFormatter;
 import com.samples.market.models.HistoricalTicker;
 import com.samples.market.stocks.AppConfig;
+import com.samples.market.stocks.Statics;
+import com.samples.market.stocks.visitor.interfaces.JsonQuoteVisitor;
+import com.samples.market.stocks.visitor.model.JsonQuote;
+import com.samples.market.stocks.visitor.model.JsonQuoteFormat1;
 
 import io.vertx.core.json.JsonObject;
 
@@ -17,26 +22,50 @@ import io.vertx.core.json.JsonObject;
 public class StocksService {
 	@Autowired
 	private AppConfig appConfig;
+	
+	@Autowired
+	private Statics statics;
+	
+	@Autowired
+	private JsonQuoteVisitor jsonDailyQuoteVisitor;
 
 	public List<HistoricalTicker> getHistoricalTicker(String symbol){
 		String url = appConfig.getUrl(symbol);
 		RestTemplate rest = new RestTemplate();
 		String data = rest.getForObject(url, String.class);
-		JsonObject json = new JsonObject(data).getJsonObject("Time Series (Daily)");
+		JsonObject rawData = new JsonObject(data).getJsonObject
+				(statics.getTimeSeries().getDaily());
 		
-		List<HistoricalTicker> reply = json.stream().map(
+		JsonQuote jsonQuote = new JsonQuoteFormat1(symbol, rawData);
+		jsonQuote.accept(jsonDailyQuoteVisitor);
+		
+		List<HistoricalTicker> reply = rawData.stream().map(
 				entry -> 
-					getTicker(symbol, JsonObject.mapFrom(entry.getValue()))
+				QuoteFormatter.format1(jsonQuote.getFields(), JsonObject.mapFrom
+					(entry.getValue()))
+//					getTicker(JsonObject.mapFrom(entry.getValue()))
 						.put("symbol", symbol)
 						.put("priceDate", entry.getKey())
-					.mapTo(HistoricalTicker.class)
+					.mapTo(HistoricalTicker.class)		
 				).collect(Collectors.toList());
 		
 		return reply;
 	}
+	
+	public JsonQuote getHistoricalQuotes(String symbol) {
+		String url = appConfig.getUrl(symbol);
+		RestTemplate rest = new RestTemplate();
+		String data = rest.getForObject(url, String.class);
+		JsonObject rawData = new JsonObject(data).getJsonObject
+				(statics.getTimeSeries().getDaily());
 		
-	private JsonObject getTicker(String symbol, JsonObject priceOfDay) {
-//		JsonObject ticker = new JsonObject("{\"ticker\":\""+symbol+"\"}");
+		JsonQuote jsonQuote = new JsonQuoteFormat1(symbol, rawData);
+		jsonQuote.accept(jsonDailyQuoteVisitor);
+		
+		return jsonQuote;
+	}
+		
+	private JsonObject getTicker(JsonObject priceOfDay) {
 		JsonObject ticker = new JsonObject();
 		for (Entry<String,Object> elem : priceOfDay.getMap().entrySet()) {
 			if (elem.getKey().contains("open")) {
@@ -52,4 +81,5 @@ public class StocksService {
 		
 		return ticker;
 	}
+	
 }

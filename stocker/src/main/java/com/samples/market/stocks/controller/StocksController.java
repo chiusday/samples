@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.samples.market.stocks.service.StocksService;
+import com.samples.market.stocks.visitor.model.JsonQuote;
 
 import io.vertx.core.json.JsonObject;
 
@@ -19,7 +20,10 @@ public class StocksController {
 	@GetMapping("/stock/get/list/{id}")
 	public ResponseEntity<Object> getList(@PathVariable String id){
 		JsonObject response = new JsonObject();
-		response.put(id, stocksService.getHistoricalTicker(id));
+//		response.put(id, stocksService.getHistoricalTicker(id));
+		
+		JsonQuote jsonQuote = stocksService.getHistoricalQuotes(id);
+		response.put(id, jsonQuote.getHistoricalQuotes());
 		
 		return new ResponseEntity<Object>(response.encodePrettily(), HttpStatus.OK);
 	}
