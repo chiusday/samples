@@ -3,12 +3,12 @@ package com.samples.vertx.reactive.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.AppConfig;
-import com.samples.vertx.reactive.enums.DBOperations;
-import com.samples.vertx.reactive.model.DataAccessMessage;
 import com.samples.vertx.reactive.model.User;
 import com.samples.vertx.reactive.verticle.DataAccessInterchange;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
+import com.samples.vertx.renums.DBOperations;
 
 import io.reactivex.Single;
 import io.vertx.core.json.JsonArray;
@@ -32,7 +32,7 @@ public class UserService {
 	}
 	
 	public RxResponse<User> get(int id) {
-		DataAccessMessage<User> userDAMessage = new DataAccessMessage<>(User.class);
+		DataAccessMessage<User> userDAMessage = new DataAccessMessage<User>(User.class);
 		userDAMessage.setCriteria("id=?");
 		userDAMessage.setParameters(new JsonArray().add(id));
 		userDAMessage.setOperation(DBOperations.select);

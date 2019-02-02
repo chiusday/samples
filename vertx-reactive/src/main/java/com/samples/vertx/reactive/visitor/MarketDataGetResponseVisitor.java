@@ -5,12 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.samples.vertx.reactive.model.DataAccessMessage;
-import com.samples.vertx.reactive.model.Ticker;
+import com.samples.market.model.Ticker;
+import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.visitor.interfaces.IRxResponseVisitor;
 
 @Component
-public class MarketDataGetResponseVisitor implements IRxResponseVisitor<Ticker> {
+public class MarketDataGetResponseVisitor<T extends Ticker> implements IRxResponseVisitor<T> {
 
 	@Value("${message.failed.internal-error.get}")
 	private String errorText;
@@ -32,14 +32,14 @@ public class MarketDataGetResponseVisitor implements IRxResponseVisitor<Ticker> 
 	}
 
 	@Override
-	public ResponseEntity<Object> getResponseEntity(DataAccessMessage<Ticker> message) {
+	public ResponseEntity<Object> getResponseEntity(DataAccessMessage<T> message) {
 		return new ResponseEntity<>
 			(getModel(message)==null ? getResultText() : message.getModel(), 
 				this.httpStatus);
 	}
 
 	@Override
-	public Ticker getModel(DataAccessMessage<Ticker> messageTicker) {
+	public T getModel(DataAccessMessage<T> messageTicker) {
 		if (messageTicker.getRecords().isEmpty()) {
 			this.currentMessage = "Record not found.";
 			httpStatus = HttpStatus.NOT_FOUND;

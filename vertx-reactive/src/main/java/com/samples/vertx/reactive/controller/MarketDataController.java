@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.samples.vertx.reactive.model.Ticker;
+import com.samples.market.model.Ticker;
 import com.samples.vertx.reactive.service.MarketDataService;
 import com.samples.vertx.reactive.visitor.MarketDataAddResponseVisitor;
 import com.samples.vertx.reactive.visitor.MarketDataGetResponseVisitor;
@@ -26,8 +26,8 @@ public class MarketDataController {
 
 	//Post is used so this can be secured via spring oauth2
 	@PostMapping("/market-data")
-	public ResponseEntity<Object> addMarketData(@RequestBody Ticker ticker){
-		RxResponse<Ticker> marketDataResponse = marketDataService.addMarketData(ticker);
+	public <T extends Ticker> ResponseEntity<Object> addMarketData(@RequestBody T ticker){
+		RxResponse<T> marketDataResponse = marketDataService.addMarketData(ticker);
 		marketDataResponse.accept(marketDataAddResponseVisitor);
 		
 		return marketDataResponse.getResponseEntity();

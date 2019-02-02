@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.samples.vertx.reactive.model.DataAccessMessage;
+import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
 
 import io.vertx.core.json.Json;

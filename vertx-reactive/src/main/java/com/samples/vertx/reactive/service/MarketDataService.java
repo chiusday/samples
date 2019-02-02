@@ -3,12 +3,12 @@ package com.samples.vertx.reactive.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.samples.market.model.Ticker;
+import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.AppConfig;
-import com.samples.vertx.reactive.enums.DBOperations;
-import com.samples.vertx.reactive.model.DataAccessMessage;
-import com.samples.vertx.reactive.model.Ticker;
 import com.samples.vertx.reactive.verticle.DataAccessInterchange;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
+import com.samples.vertx.renums.DBOperations;
 
 import io.reactivex.Single;
 import io.vertx.core.json.JsonArray;
@@ -24,8 +24,8 @@ public class MarketDataService {
 	@Autowired
 	private DataAccessInterchange dataAccessInterchange;
 	
-	public RxResponse<Ticker> addMarketData(Ticker ticker) {
-		DataAccessMessage<Ticker> tickerMessage = new DataAccessMessage<>(Ticker.class);
+	public <T extends Ticker> RxResponse<T> addMarketData(T ticker) {
+		DataAccessMessage<T> tickerMessage = new DataAccessMessage<T>();
 		tickerMessage.setModel(ticker);
 		tickerMessage.setOperation(DBOperations.insert);
 		
@@ -41,8 +41,8 @@ public class MarketDataService {
 		return processMarketData(tickerMessage);
 	}
 
-	private RxResponse<Ticker> processMarketData(DataAccessMessage<Ticker> tickerMsg){
-		RxResponse<Ticker> marketDataResponse = new RxResponse<>();
+	private <T extends Ticker> RxResponse<T> processMarketData(DataAccessMessage<T> tickerMsg){
+		RxResponse<T> marketDataResponse = new RxResponse<>();
 		EventBus eventBus = dataAccessInterchange.getRxVertx().eventBus();
 		Single<Message<JsonObject>> response = eventBus.rxSend
 				(appConfig.getAddressMarketInfo(), JsonObject.mapFrom(tickerMsg));

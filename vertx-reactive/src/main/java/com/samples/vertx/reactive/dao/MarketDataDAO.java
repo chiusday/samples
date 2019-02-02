@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.samples.market.model.HistoricalTicker;
+import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.DBConfig;
 import com.samples.vertx.reactive.interfaces.VertxSQLDataAccess;
-import com.samples.vertx.reactive.model.DataAccessMessage;
-import com.samples.vertx.reactive.model.Ticker;
 
 import io.reactivex.Single;
 import io.vertx.core.json.JsonArray;
@@ -16,23 +16,23 @@ import io.vertx.ext.sql.UpdateResult;
 import io.vertx.reactivex.core.eventbus.Message;
 
 @Component
-public class MarketDataDAO extends VertxSQLDataAccess<Ticker> {
+public class MarketDataDAO extends VertxSQLDataAccess<HistoricalTicker> {
 	private Logger log = LoggerFactory.getLogger(MarketDataDAO.class);
 
 	public MarketDataDAO(DBConfig config) {
-		super(Ticker.class, config);
+		super(HistoricalTicker.class, config);
 	}
 
 	@Override
 	protected String getTableName() {
-		return "Ticker";
+		return "HistoricalTicker";
 	}
 	
 	//Since this is latency sensitive, JsonObject.mapFrom will not be used
 	//because it will have an overhead on speed but not much gain in shortening
 	//the code.
 	@Override
-	public JsonArray toJsonArray(Ticker ticker) {
+	public JsonArray toJsonArray(HistoricalTicker ticker) {
 		return new JsonArray()
 				.add(ticker.getSymbol())
 				.add(ticker.getOpen())
@@ -44,7 +44,7 @@ public class MarketDataDAO extends VertxSQLDataAccess<Ticker> {
 	//Latency is priority here so I will recode everything without getSymbol
 	//instead of calling toJsonArray then remove index 0
 	@Override
-	public JsonArray noKeyJsonArray(Ticker ticker) {
+	public JsonArray noKeyJsonArray(HistoricalTicker ticker) {
 		return new JsonArray()
 				.add(ticker.getOpen())
 				.add(ticker.getClose())
@@ -73,8 +73,8 @@ public class MarketDataDAO extends VertxSQLDataAccess<Ticker> {
 	
 	@Override
 	public void insert(Message<JsonObject> message) {
-		DataAccessMessage<Ticker> tickerMessage = new DataAccessMessage<>(message.body());
-		Ticker ticker = tickerMessage.getModel();
+		DataAccessMessage<HistoricalTicker> tickerMessage = new DataAccessMessage<>(message.body());
+		HistoricalTicker ticker = tickerMessage.getModel();
 		insert(ticker, next -> {
 			if (isTransactionFailed(next, tickerMessage) == false){
 				tickerMessage.setModel(next.result());
@@ -85,7 +85,7 @@ public class MarketDataDAO extends VertxSQLDataAccess<Ticker> {
 
 	@Override
 	public void select(Message<JsonObject> message) {
-		DataAccessMessage<Ticker> tickerMessage = new DataAccessMessage<>(message.body());
+		DataAccessMessage<HistoricalTicker> tickerMessage = new DataAccessMessage<>(message.body());
 		select(tickerMessage.getCriteria(), tickerMessage.getParameters(), next -> {
 			if (isTransactionFailed(next, tickerMessage) == false){
 				tickerMessage.setRecords(next.result());
@@ -96,7 +96,7 @@ public class MarketDataDAO extends VertxSQLDataAccess<Ticker> {
 
 	@Override
 	public void update(Message<JsonObject> message) {
-		DataAccessMessage<Ticker> msgTicker = new DataAccessMessage<>(message.body());
+		DataAccessMessage<HistoricalTicker> msgTicker = new DataAccessMessage<>(message.body());
 		msgTicker.setKey(msgTicker.getModel().getSymbol());
 		String sql = "UPDATE "+getTableName()+" SET "
 				+ "open=?, close=?, high=?, low=? "
@@ -111,7 +111,7 @@ public class MarketDataDAO extends VertxSQLDataAccess<Ticker> {
 	
 	@Override
 	public void delete(Message<JsonObject> message) {
-		DataAccessMessage<Ticker> msgTicker = new DataAccessMessage<>(message.body());
+		DataAccessMessage<HistoricalTicker> msgTicker = new DataAccessMessage<>(message.body());
 		msgTicker.setCriteria("symbol="+msgTicker.getModel().getSymbol());
 		
 		delete("id=?", new JsonArray().add(msgTicker.getModel().getSymbol()), 

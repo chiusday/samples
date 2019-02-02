@@ -5,12 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.samples.vertx.reactive.model.DataAccessMessage;
-import com.samples.vertx.reactive.model.Ticker;
+import com.samples.market.model.Ticker;
+import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.visitor.interfaces.IRxResponseVisitor;
 
 @Component
-public class MarketDataAddResponseVisitor implements IRxResponseVisitor<Ticker> {
+public class MarketDataAddResponseVisitor<T extends Ticker> implements IRxResponseVisitor<T> {
 	@Value("${message.failed.internal-error.ins}")
 	private String errorMessage;
 	
@@ -28,7 +28,7 @@ public class MarketDataAddResponseVisitor implements IRxResponseVisitor<Ticker> 
 	}
 
 	@Override
-	public ResponseEntity<Object> getResponseEntity(DataAccessMessage<Ticker> message) {
+	public ResponseEntity<Object> getResponseEntity(DataAccessMessage<T> message) {
 		return new ResponseEntity<>(message.getModel(), HttpStatus.CREATED);
 	}
 }

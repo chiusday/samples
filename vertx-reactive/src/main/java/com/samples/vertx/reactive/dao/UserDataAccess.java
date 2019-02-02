@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.samples.vertx.reactive.model.DataAccessMessage;
+import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.DBConfig;
 import com.samples.vertx.reactive.interfaces.VertxSQLDataAccess;
 import com.samples.vertx.reactive.model.User;
@@ -82,7 +82,9 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 			if (isTransactionFailed(next, userMessage) == false){
 				userMessage.setRecords(next.result());
 			}
-			message.reply(JsonObject.mapFrom(userMessage));
+			DataAccessMessage<User> replyMessage = new DataAccessMessage<>(message.body());
+			replyMessage.setRecords(userMessage.getRecords());
+			message.reply(JsonObject.mapFrom(replyMessage));
 		});
 	}
 

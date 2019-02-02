@@ -3,8 +3,8 @@ package com.samples.vertx.reactive.interfaces;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.DBConfig;
-import com.samples.vertx.reactive.model.DataAccessMessage;
 
 import io.vertx.reactivex.core.Vertx;
 import io.vertx.reactivex.ext.jdbc.JDBCClient;
