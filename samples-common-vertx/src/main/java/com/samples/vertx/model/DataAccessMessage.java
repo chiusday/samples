@@ -70,7 +70,6 @@ public class DataAccessMessage<T> {
 	 * insert and update
 	 * @param model
 	 */
-	@SuppressWarnings("unchecked")
 	public void setModel(T model){ this.model = model; }
 	public T getModel(){ return this.model; }
 	
