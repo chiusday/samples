@@ -25,7 +25,7 @@ public class TestStocksService {
 	
 	@Test
 	public void testGetHistoricalTicker() {
-		JsonQuote quote = stocksService.getHistoricalQuotes("TSLA");
+		JsonQuote quote = stocksService.getHistoricalQuotes("MSFT");
 		quote.accept(jsonDailyQuoteVisitor);
 		List<HistoricalTicker> tickers = quote.getHistoricalQuotes();
 		assertFalse(tickers.isEmpty());
