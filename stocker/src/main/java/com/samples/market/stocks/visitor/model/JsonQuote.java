@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.samples.market.models.HistoricalTicker;
+import com.samples.market.model.HistoricalTicker;
 import com.samples.market.stocks.visitor.interfaces.IVisitor;
 import com.samples.market.stocks.visitor.interfaces.iVisitorModel;
 

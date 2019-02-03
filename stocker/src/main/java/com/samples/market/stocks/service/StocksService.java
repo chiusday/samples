@@ -1,7 +1,6 @@
 package com.samples.market.stocks.service;
 
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.samples.market.helper.QuoteFormatter;
-import com.samples.market.models.HistoricalTicker;
+import com.samples.market.model.HistoricalTicker;
 import com.samples.market.stocks.AppConfig;
 import com.samples.market.stocks.Statics;
 import com.samples.market.stocks.visitor.interfaces.JsonQuoteVisitor;
@@ -65,21 +64,21 @@ public class StocksService {
 		return jsonQuote;
 	}
 		
-	private JsonObject getTicker(JsonObject priceOfDay) {
-		JsonObject ticker = new JsonObject();
-		for (Entry<String,Object> elem : priceOfDay.getMap().entrySet()) {
-			if (elem.getKey().contains("open")) {
-				ticker.put("open", elem.getValue());
-			} else if (elem.getKey().contains("close")) {
-				ticker.put("close", elem.getValue());
-			} else if (elem.getKey().contains("high")) {
-				ticker.put("high", elem.getValue());
-			} else if (elem.getKey().contains("low")) {
-				ticker.put("low", elem.getValue());
-			}
-		}
-		
-		return ticker;
-	}
+//	private JsonObject getTicker(JsonObject priceOfDay) {
+//		JsonObject ticker = new JsonObject();
+//		for (Entry<String,Object> elem : priceOfDay.getMap().entrySet()) {
+//			if (elem.getKey().contains("open")) {
+//				ticker.put("open", elem.getValue());
+//			} else if (elem.getKey().contains("close")) {
+//				ticker.put("close", elem.getValue());
+//			} else if (elem.getKey().contains("high")) {
+//				ticker.put("high", elem.getValue());
+//			} else if (elem.getKey().contains("low")) {
+//				ticker.put("low", elem.getValue());
+//			}
+//		}
+//		
+//		return ticker;
+//	}
 	
 }

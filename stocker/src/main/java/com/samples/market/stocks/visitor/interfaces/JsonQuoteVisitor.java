@@ -2,7 +2,7 @@ package com.samples.market.stocks.visitor.interfaces;
 
 import java.util.Map.Entry;
 
-import com.samples.market.models.HistoricalTicker;
+import com.samples.market.model.HistoricalTicker;
 import com.samples.market.stocks.visitor.interfaces.IVisitor;
 import com.samples.market.stocks.visitor.model.JsonQuote;
 
