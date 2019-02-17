@@ -1,5 +1,7 @@
 package com.samples.vertx.reactive.dao;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -27,7 +29,12 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 	protected String getTableName() {
 		return "User";
 	}
-
+	
+	@Override
+	protected String getInsertSql() {
+		return "INSERT INTO " + getTableName() + " VALUES (?, ?, ?, ?)";
+	}
+	
 	@Override
 	public JsonArray toJsonArray(User model) {
 		JsonArray reply = new JsonArray();
@@ -76,6 +83,19 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 	}
 
 	@Override
+	public void batchInsert(Message<JsonObject> message) {
+		DataAccessMessage<User> userMessage = new DataAccessMessage<>(message.body());
+		List<JsonArray> batchParams = userMessage.getListJsonArray();
+		batchInsert(batchParams, next -> {
+			if (isTransactionFailed(next, userMessage) == false) {
+				userMessage.setBatchResult(next.result());
+			}
+			message.reply(userMessage);
+		});
+		
+	}
+	
+	@Override
 	public void select(Message<JsonObject> message) {
 		DataAccessMessage<User> userMessage = new DataAccessMessage<>(message.body());
 		select(userMessage.getCriteria(), userMessage.getParameters(), next -> {
@@ -116,4 +136,5 @@ public class UserDataAccess extends VertxSQLDataAccess<User> {
 				message.reply(JsonObject.mapFrom(msgUser));
 			});
 	}
+
 }

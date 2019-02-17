@@ -10,7 +10,7 @@ import io.vertx.core.json.JsonObject;
 
 public interface JsonQuoteVisitor extends IVisitor {
 	
-	void additionalFields(JsonObject quote, Entry<String, Object> entry);
+	void additionalFields(String symbol, JsonObject quote, Entry<String, Object> entry);
 	
 	default public void visit(JsonQuote json) {
 		json.getData().forEach(entry -> {
@@ -22,7 +22,7 @@ public interface JsonQuoteVisitor extends IVisitor {
 					}
 				});
 			});
-			additionalFields(quote, entry);
+			additionalFields(json.getSymbol(), quote, entry);
 			json.getHistoricalQuotes().add(quote.mapTo(HistoricalTicker.class));
 		});		
 	}

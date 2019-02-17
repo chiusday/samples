@@ -1,5 +1,7 @@
 package com.samples.vertx.reactive.dao;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -28,35 +30,39 @@ public class MarketDataDAO extends VertxSQLDataAccess<HistoricalTicker> {
 		return "HistoricalTicker";
 	}
 	
+	@Override
+	protected String getInsertSql() {
+		return "INSERT INTO " + getTableName()
+			+ " (symbol, open, close, high, low, price_date)"
+			+ " VALUES (?, ?, ?, ?, ?, ?)";
+	}
+
 	//Since this is latency sensitive, JsonObject.mapFrom will not be used
-	//because it will have an overhead on speed but not much gain in shortening
-	//the code.
+	//because the benefit is not worth the processing speed cost.
 	@Override
 	public JsonArray toJsonArray(HistoricalTicker ticker) {
+		return noKeyJsonArray(ticker);
+	}
+	
+	//Since this is latency sensitive, JsonObject.mapFrom will not be used
+	//because the benefit is not worth the processing speed cost.
+	@Override
+	public JsonArray noKeyJsonArray(HistoricalTicker ticker) {
 		return new JsonArray()
 				.add(ticker.getSymbol())
 				.add(ticker.getOpen())
 				.add(ticker.getClose())
 				.add(ticker.getHigh())
-				.add(ticker.getLow());
-	}
-	
-	//Latency is priority here so I will recode everything without getSymbol
-	//instead of calling toJsonArray then remove index 0
-	@Override
-	public JsonArray noKeyJsonArray(HistoricalTicker ticker) {
-		return new JsonArray()
-				.add(ticker.getOpen())
-				.add(ticker.getClose())
-				.add(ticker.getHigh())
-				.add(ticker.getLow());
+				.add(ticker.getLow())
+				.add(ticker.getPriceDate());
 	}
 	
 	@Override
 	public void executeCreate() {
 		String s = "CREATE TABLE IF NOT EXISTS " + getTableName()
-			+" (symbol VARCHAR(64) IDENTITY, open DECIMAL(11,4), close DECIMAL(11,4),"
-			+" high DECIMAL(11,4), low DECIMAL(11,4))";
+			+" (id IDENTITY NOT NULL PRIMARY KEY, symbol VARCHAR(64),"
+			+" open DECIMAL(11,4), close DECIMAL(11,4), high DECIMAL(11,4),"
+			+" low DECIMAL(11,4), price_date Date)";
 		
 		this.jdbc.rxGetConnection()
 			.flatMap(conn -> {
@@ -80,6 +86,18 @@ public class MarketDataDAO extends VertxSQLDataAccess<HistoricalTicker> {
 				tickerMessage.setModel(next.result());
 			}
 			message.reply(JsonObject.mapFrom(tickerMessage));
+		});
+	}
+	
+	@Override
+	public void batchInsert(Message<JsonObject> message) {
+		DataAccessMessage<HistoricalTicker> tickerMessage = new DataAccessMessage<>(message.body());
+		List<JsonArray> batchParams = tickerMessage.getListJsonArray();
+		batchInsert(batchParams, next -> {
+			if (isTransactionFailed(next, tickerMessage) == false) {
+				tickerMessage.setBatchResult(next.result());
+			}
+			message.reply(JsonObject.mapFrom(tickerMessage));			
 		});
 	}
 

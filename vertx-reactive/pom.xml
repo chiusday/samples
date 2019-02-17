@@ -8,6 +8,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   		<java.version>1.8</java.version>
   		<vertx.version>3.6.2</vertx.version>
+  		<samples-common.version>0.0.1</samples-common.version>
   	</properties>
   	
   	<parent>
@@ -20,12 +21,17 @@
   		<dependency>
   			<groupId>com.samples.common</groupId>
   			<artifactId>samples-common-market</artifactId>
-  			<version>0.0.1</version>
+  			<version>${samples-common.version}</version>
   		</dependency>
   		<dependency>
   			<groupId>com.samples.common</groupId>
   			<artifactId>samples-common-vertx</artifactId>
-  			<version>0.0.1</version>
+  			<version>${samples-common.version}</version>
+  		</dependency>
+  		<dependency>
+			<groupId>com.jon</groupId>
+			<artifactId>jon-utilities</artifactId>
+			<version>1</version>
   		</dependency>
   		<dependency>
   			<groupId>org.springframework.boot</groupId>
@@ -38,6 +44,14 @@
   				</exclusion>
   			</exclusions>
   			 -->
+  		</dependency>
+
+  		<dependency>
+  			<groupId>org.springframework.boot</groupId>
+  			<artifactId>
+  				spring-boot-configuration-processor
+  			</artifactId>
+  			<optional>true</optional>
   		</dependency>
 
   		<dependency>
@@ -87,7 +101,6 @@
   			<artifactId>junit</artifactId>
   			<scope>test</scope>
   		</dependency>
-  		
   	</dependencies>
 
 	<build>

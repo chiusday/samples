@@ -20,6 +20,8 @@ public interface IVertxSQLDataAccess<T> {
 	
 	void insert(T model,  Handler<AsyncResult<T>> next); 
 	
+	void batchInsert(Message<JsonObject> message); 
+
 	void delete(Message<JsonObject> message);
 
 	/**

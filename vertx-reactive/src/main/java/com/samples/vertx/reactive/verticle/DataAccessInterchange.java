@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.AppConfig;
 import com.samples.vertx.reactive.service.DataAccessMessageRouter;
 
@@ -41,6 +42,14 @@ public class DataAccessInterchange extends AbstractVerticle {
 	
 	private void processRequest(Message<JsonObject> message){
 		log.debug("About to route message >> " + Json.encodePrettily(message.body()));
-		messageRouter.routeMessage(message);
+		try {
+			messageRouter.routeMessage(message);
+		} catch (Exception e) {
+			log.error("Routing message failed:\n" + e);
+			DataAccessMessage<?> daMessage = new DataAccessMessage<>(message.body());
+			daMessage.setFailure(new JsonObject().put(DataAccessMessage.FAILURE_MESSAGE, 
+					e.getMessage()));
+			message.reply(JsonObject.mapFrom(message));
+		}
 	}
 }

@@ -3,6 +3,9 @@ package com.samples.vertx.reactive.interfaces;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.DBConfig;
 
@@ -20,9 +23,9 @@ import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.UpdateResult;
 
 public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
+	private Logger log = LoggerFactory.getLogger(VertxSQLDataAccess.class);
 	private final String SELECT_PREFIX;
 	private final String DELETE_PREFIX;
-	private final String INSERT_STMT;
 	
 	protected final Class<T> type;
 	protected JDBCClient jdbc;
@@ -34,7 +37,6 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 		this.config = JsonObject.mapFrom(config);
 		this.SELECT_PREFIX = "SELECT * from " + getTableName() + " WHERE ";
 		this.DELETE_PREFIX = "DELETE from " + getTableName() + " WHERE ";
-		this.INSERT_STMT = "INSERT INTO " + getTableName() + " VALUES (?, ?, ?, ?)";
 	}
 	
 	public Class<T> getType(){
@@ -43,6 +45,8 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 	
 	protected abstract String getTableName();
 	
+	protected abstract String getInsertSql();
+
 	/**
 	 *  
 	 *  Returns io.vertx.core.json.JsonArray containing all the fields of the model.
@@ -56,7 +60,7 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 	public void insert(T model,  Handler<AsyncResult<T>> next) {
 		this.jdbc.getConnection(asyncConn -> {
 			SQLConnection connection = asyncConn.result();
-			connection.updateWithParams(INSERT_STMT, toJsonArray(model), (result) -> {
+			connection.updateWithParams(getInsertSql(), toJsonArray(model), (result) -> {
 				if (result.failed()){
 					next.handle(Future.failedFuture(result.cause()));
 				} else {
@@ -64,6 +68,20 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 				}
 				connection.close();
 			});
+		});
+	}
+	
+	public void batchInsert(List<JsonArray> batchParams, Handler<AsyncResult<List<Integer>>> next) {
+		this.jdbc.getConnection(asyncConn -> {
+			SQLConnection connection = asyncConn.result();
+			connection.batchWithParams(getInsertSql(), batchParams, result -> {
+				if (result.failed()) {
+					next.handle(Future.failedFuture(result.cause()));
+				} else {
+					next.handle(Future.succeededFuture(result.result()));
+				}
+			});
+			connection.close();
 		});
 	}
 
@@ -205,6 +223,7 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 	@SuppressWarnings("rawtypes")
 	protected boolean isTransactionFailed(AsyncResult next, DataAccessMessage<T> daMessage){
 		if (next.failed()){
+			log.error(next.cause().getMessage());
 			//failure json can be standardized
 			daMessage.setFailure(new JsonObject().put(DataAccessMessage.FAILURE_MESSAGE, 
 					next.cause().getMessage()));

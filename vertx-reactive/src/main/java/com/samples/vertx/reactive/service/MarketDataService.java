@@ -1,5 +1,7 @@
 package com.samples.vertx.reactive.service;
 
+import static com.samples.utilities.objects.ClassUtil.getClazz;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,15 +27,15 @@ public class MarketDataService {
 	private DataAccessInterchange dataAccessInterchange;
 	
 	public <T extends Ticker> RxResponse<T> addMarketData(T ticker) {
-		DataAccessMessage<T> tickerMessage = new DataAccessMessage<T>();
+		DataAccessMessage<T> tickerMessage = new DataAccessMessage<>(getClazz(ticker));
 		tickerMessage.setModel(ticker);
 		tickerMessage.setOperation(DBOperations.insert);
 		
 		return processMarketData(tickerMessage);
 	}
 
-	public RxResponse<Ticker> getMarketData(String id) {
-		DataAccessMessage<Ticker> tickerMessage = new DataAccessMessage<>(Ticker.class);
+	public <T extends Ticker> RxResponse<T> getMarketData(String id) {
+		DataAccessMessage<T> tickerMessage = new DataAccessMessage<>();
 		tickerMessage.setCriteria("symbol=?");
 		tickerMessage.setParameters(new JsonArray().add(id));
 		tickerMessage.setOperation(DBOperations.select);

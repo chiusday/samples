@@ -3,6 +3,8 @@ package com.samples.vertx.reactive.service;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import io.vertx.core.json.JsonObject;
 
 @Service
 public class DataAccessMessageRouter {
+	private Logger log = LoggerFactory.getLogger(DataAccessMessageRouter.class);
+
 
 	@Autowired
 	private IVertxSQLDataAccess<User> userDataAccess;
@@ -61,6 +65,9 @@ public class DataAccessMessageRouter {
 		case insert : 
 			operators.get(daMessage.getType()).insert(message);
 			break;
+		case batchInsert : 
+			operators.get(daMessage.getType()).batchInsert(message);
+			break;
 		case update :
 			operators.get(daMessage.getType()).update(message);
 			break;
@@ -68,8 +75,9 @@ public class DataAccessMessageRouter {
 			operators.get(daMessage.getType()).delete(message);
 			break;
 		default :
-			daMessage.setFailure(new JsonObject().put("message", operation.name() 
-					+ " operation handler is not found"));
+			String error = operation.name() + " operation handler is not found";
+			log.error(error);
+			daMessage.setFailure(new JsonObject().put("message", error));
 			message.reply(JsonObject.mapFrom(daMessage));
 		}
 	}

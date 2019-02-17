@@ -18,10 +18,11 @@ public class DataAccessMessage<T> {
 	private String key;
 	private String criteria;
 	private int affectedRecords;
+	private List<Integer> batchResult;
 	private JsonArray parameters;
 	private JsonArray outParameters;
 	private List<JsonObject> records;
-	private List<JsonArray> streamedRecords;
+	private List<JsonArray> listJsonArray;
 	private ResultSet storedProcResult;
 	private DBOperations operation;
 	private JsonObject failure;
@@ -43,11 +44,13 @@ public class DataAccessMessage<T> {
 		this.key = json.getString("key");
 		this.criteria = json.getString("criteria");
 		this.affectedRecords = json.getInteger("affectedRecords");
+		this.batchResult = json.getValue("batchResult")==null ? null 
+				: json.getJsonArray("batchResult").getList();
 		this.parameters = json.getJsonArray("parameters");
 		this.outParameters = json.getJsonArray("outParameters");
 		this.records = json.getValue("records")==null ? null : json.getJsonArray("records").getList();
-		this.streamedRecords = json.getJsonArray("streamedRecords")==null ? null : 
-			json.getJsonArray("streamedRecords").getList();
+		this.listJsonArray = json.getJsonArray("listJsonArray")==null ? null : 
+			json.getJsonArray("listJsonArray").getList();
 		this.storedProcResult = (ResultSet)json.getValue("storedProcResult");
 		this.operation = DBOperations.valueOf(json.getString("operation"));
 		this.failure = JsonObject.mapFrom(json.getJsonObject("failure"));
@@ -100,6 +103,15 @@ public class DataAccessMessage<T> {
 	public int getAffectedRecords() { return this.affectedRecords; }
 	
 	/**
+	 * Batch Result
+	 * @return List of results
+	 */
+	public List<Integer> getBatchResult() { return this.batchResult; }
+	public void setBatchResult(List<Integer> batchResult) {
+		this.batchResult = batchResult;
+	}
+	
+	/**
 	 * Parameters for the Prepared SQL Statement. Used in:
 	 * select and delete (multiple records)
 	 * @return
@@ -127,8 +139,8 @@ public class DataAccessMessage<T> {
 	 * select streamed records
 	 * @return
 	 */
-	public List<JsonArray> getStreamedRecords(){ return this.streamedRecords; }
-	public void setStreamedRecords(List<JsonArray> streamedRecords) {this.streamedRecords = streamedRecords;}
+	public List<JsonArray> getListJsonArray(){ return this.listJsonArray; }
+	public void setListJsonArray(List<JsonArray> listJsonArray) {this.listJsonArray = listJsonArray;}
 
 	public DBOperations getOperation(){ return this.operation; }
 	public void setOperation(DBOperations operation){ this.operation = operation; }

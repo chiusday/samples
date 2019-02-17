@@ -12,7 +12,10 @@ import io.vertx.core.json.JsonObject;
 public class JsonDailyQuoteVisitor implements JsonQuoteVisitor {
 
 	@Override
-	public void additionalFields(JsonObject quote, Entry<String, Object> entry) {
+	public void additionalFields(String symbol, JsonObject quote, 
+			Entry<String, Object> entry) {
+		
+		quote.put("symbol", symbol);
 		quote.put("priceDate", entry.getKey());
 	}
 
