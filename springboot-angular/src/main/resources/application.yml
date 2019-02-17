@@ -1,0 +1,9 @@
+server:
+  port: 60011
+  servlet:
+    context-path: /samples
+    
+logging:
+  level:
+    org.springframework.web: debug
+    org.springframework.security: debug
