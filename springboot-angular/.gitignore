@@ -1,9 +1,0 @@
-/target/
-/node/
-/etc/
-/.mvn/wrapper/
-.project
-.settings
-.classpath
-.DS_Store
-package-lock.json
