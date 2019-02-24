@@ -3,6 +3,8 @@ package com.samples.vertx.reactive.test.marketdata.visitor;
 import static com.samples.vertx.reactive.test.helper.DataBuilder.createHistoricalQuote;
 import static com.samples.vertx.reactive.test.helper.DataBuilder.createHistoricalQuotes;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +20,11 @@ import com.samples.vertx.enums.DBOperations;
 import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.AppConfig;
 import com.samples.vertx.reactive.verticle.DataAccessInterchange;
+import com.samples.vertx.reactive.visitor.HistoricalTickerBatchAddResponseVisitor;
 import com.samples.vertx.reactive.visitor.HistoricalTickersVisitor;
 import com.samples.vertx.reactive.visitor.MarketDataAddResponseVisitor;
+import com.samples.vertx.reactive.visitor.interfaces.BatchRxResponseVisitor;
+import com.samples.vertx.reactive.visitor.model.BatchRxResponse;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
 import com.samples.vertx.reactive.visitor.model.Tickers;
 
@@ -36,6 +41,9 @@ public class TestMarketDataVisitor {
 	
 	@Autowired
 	private HistoricalTickersVisitor historicalTickersVisitor;
+	
+	@Autowired
+	private HistoricalTickerBatchAddResponseVisitor historicalTickerBatchAdd;
 	
 	@Autowired
 	private DataAccessInterchange dataAccessInterchange;
@@ -66,17 +74,44 @@ public class TestMarketDataVisitor {
 	
 	@Test
 	public void testHistoricalTickerVisitor() {
-		Tickers<HistoricalTicker> tickers = new Tickers<>();
-		tickers.setTickers(createHistoricalQuotes());
-		tickers.accept(historicalTickersVisitor);
+		Tickers<HistoricalTicker> tickers = getProcessedTickers();
 		
 		Assert.assertNotNull(tickers.getListJsonArray());
 		Assert.assertFalse(tickers.getListJsonArray().isEmpty());
+	}
+	
+	@Test
+	public void testHistoricalTickerBatchAddResponseVisitor() {
+		BatchRxResponse<HistoricalTicker> response = 
+				testBatchAddResponseVisitor(historicalTickerBatchAdd);
+		
+		Assert.assertEquals(HttpStatus.CREATED, response.getResponseEntity().getStatusCode());
+		Assert.assertFalse(response.isHasError());
+	}
+	
+	private BatchRxResponse<HistoricalTicker> testBatchAddResponseVisitor
+			(BatchRxResponseVisitor<HistoricalTicker> batchAddResponseVisitor) {
+		
+		BatchRxResponse<HistoricalTicker> response = new BatchRxResponse<>();
+		msg.setListJsonArray(getProcessedTickers().getListJsonArray());
+		msg.setOperation(DBOperations.batchInsert);
+		response.setSingle(getResponseSingle(msg));
+		response.accept(batchAddResponseVisitor);
+		
+		return response;
 	}
 	
 	private Single<Message<JsonObject>> getResponseSingle
 			(DataAccessMessage<HistoricalTicker> msg) {
 		
 		return eventBus.rxSend(appConfig.getAddressMarketInfo(), JsonObject.mapFrom(msg));
+	}
+	
+	private Tickers<HistoricalTicker> getProcessedTickers() {
+		Tickers<HistoricalTicker> tickers = new Tickers<>();
+		tickers.setTickers(createHistoricalQuotes());
+		tickers.accept(historicalTickersVisitor);
+		
+		return tickers;
 	}
 }
