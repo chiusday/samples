@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.samples.market.model.Ticker;
+import com.samples.vertx.enums.DBOperations;
 import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.AppConfig;
 import com.samples.vertx.reactive.verticle.DataAccessInterchange;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
-import com.samples.vertx.renums.DBOperations;
 
 import io.reactivex.Single;
 import io.vertx.core.json.JsonArray;

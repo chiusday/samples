@@ -1,4 +1,4 @@
-package com.samples.vertx.renums;
+package com.samples.vertx.enums;
 
 public enum DBOperations {
 	insert,

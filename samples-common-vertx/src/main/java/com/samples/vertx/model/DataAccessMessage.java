@@ -2,7 +2,7 @@ package com.samples.vertx.model;
 
 import java.util.List;
 
-import com.samples.vertx.renums.DBOperations;
+import com.samples.vertx.enums.DBOperations;
 
 import io.vertx.core.json.JsonArray;
 
