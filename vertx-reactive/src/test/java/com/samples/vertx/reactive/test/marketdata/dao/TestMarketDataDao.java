@@ -16,7 +16,7 @@ import org.springframework.util.Assert;
 import com.samples.market.model.HistoricalTicker;
 import com.samples.vertx.enums.DBOperations;
 import com.samples.vertx.model.DataAccessMessage;
-import com.samples.vertx.reactive.dao.MarketDataDAO;
+import com.samples.vertx.reactive.dao.HistoricalTickerDAO;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -32,7 +32,7 @@ public class TestMarketDataDao {
 	private DataAccessMessage<HistoricalTicker> daMessage;
 	
 	@Autowired
-	private MarketDataDAO marketDataDao;
+	private HistoricalTickerDAO marketDataDao;
 	
 	@Before
 	public void setup() {

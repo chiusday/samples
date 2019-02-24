@@ -3,17 +3,19 @@ package com.samples.vertx.reactive.service;
 import static com.samples.utilities.objects.ClassUtil.getClazz;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.samples.market.model.Ticker;
 import com.samples.vertx.enums.DBOperations;
 import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.AppConfig;
 import com.samples.vertx.reactive.verticle.DataAccessInterchange;
+import com.samples.vertx.reactive.visitor.interfaces.TickersVisitor;
 import com.samples.vertx.reactive.visitor.model.BaseVisitorModelRxResp;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
+import com.samples.vertx.reactive.visitor.model.Tickers;
 
 import io.reactivex.Single;
 import io.vertx.core.json.JsonArray;
@@ -21,13 +23,15 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.eventbus.EventBus;
 import io.vertx.reactivex.core.eventbus.Message;
 
-@Service
 public class MarketDataService<T extends Ticker> {
 	@Autowired
 	private AppConfig appConfig;
 	
 	@Autowired
 	private DataAccessInterchange dataAccessInterchange;
+	
+	@Autowired
+	private TickersVisitor<T> tickersVisitor;
 	
 	public RxResponse<T> addMarketData(T ticker) {
 		DataAccessMessage<T> tickerMessage = new DataAccessMessage<>(getClazz(ticker));
@@ -55,6 +59,8 @@ public class MarketDataService<T extends Ticker> {
 		return (RxResponse<T>) processMarketData(tickerMessage,  new RxResponse<T>());
 	}
 	
+	
+	
 	protected BaseVisitorModelRxResp<T> processMarketData(DataAccessMessage<T> tickerMsg, 
 			BaseVisitorModelRxResp<T> marketDataResponse){
 		
@@ -64,5 +70,13 @@ public class MarketDataService<T extends Ticker> {
 		marketDataResponse.setSingle(response);
 		
 		return marketDataResponse;
+	}
+	
+	protected List<JsonArray> getBatchParameters(List<T> modelList) {
+		Tickers<T> tickers = new Tickers<>();
+		tickers.setTickers(modelList);
+		tickers.accept(tickersVisitor);
+		
+		return tickers.getListJsonArray();
 	}
 }
