@@ -8,12 +8,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.samples.market.model.HistoricalTicker;
+import com.samples.market.model.HistoricalTickerRequestBySymbol;
 import com.samples.vertx.reactive.service.MarketDataService;
 import com.samples.vertx.reactive.visitor.interfaces.RxResponseVisitor;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
 
 @RestController()
-public class MarketDataController {
+public class HistoricalTickerController {
 	@Autowired
 	private MarketDataService<HistoricalTicker> marketDataService;
 	
@@ -24,8 +25,10 @@ public class MarketDataController {
 	private RxResponseVisitor<HistoricalTicker> marketDataAddResponseVisitor;
 
 	//Post is used so this can be secured via spring oauth2
-	@PostMapping("/market-data")
-	public ResponseEntity<Object> addMarketData(@RequestBody HistoricalTicker ticker){
+	@PostMapping("/market-data/historical")
+	public ResponseEntity<Object> addHistoricalTicjer
+			(@RequestBody HistoricalTicker ticker){
+		
 		RxResponse<HistoricalTicker> marketDataResponse = marketDataService.addMarketData(ticker);
 		marketDataResponse.accept(marketDataAddResponseVisitor);
 		
@@ -33,10 +36,12 @@ public class MarketDataController {
 	}
 
 	//Post is used so this can be secured via spring oauth2
-	@PostMapping("/market-data/get/{id}")
-	public ResponseEntity<Object> getMarketData(@PathVariable String id){
-		RxResponse<HistoricalTicker> marketDataResponse = 
-				marketDataService.getMarketData(id, HistoricalTicker.class);
+	@PostMapping("/market-data/historical/get")
+	public ResponseEntity<Object> getHistoricalTicker
+			(@RequestBody HistoricalTickerRequestBySymbol request){
+		
+		RxResponse<HistoricalTicker> marketDataResponse = marketDataService
+				.getMarketData(request.getSymbol(), HistoricalTicker.class);
 		marketDataResponse.accept(marketDataGetResponseVisitor);
 		
 		return marketDataResponse.getResponseEntity();
