@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 
 import com.samples.market.model.Ticker;
 import com.samples.vertx.model.DataAccessMessage;
-import com.samples.vertx.reactive.visitor.interfaces.IRxResponseVisitor;
+import com.samples.vertx.reactive.visitor.interfaces.RxResponseVisitor;
 
 @Component
-public class MarketDataGetResponseVisitor<T extends Ticker> implements IRxResponseVisitor<T> {
+public class MarketDataGetResponseVisitor<T extends Ticker> extends RxResponseVisitor<T> {
 
 	@Value("${message.failed.internal-error.get}")
 	private String errorText;

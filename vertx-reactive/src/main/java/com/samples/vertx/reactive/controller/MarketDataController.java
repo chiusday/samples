@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.samples.market.model.HistoricalTicker;
 import com.samples.vertx.reactive.service.MarketDataService;
-import com.samples.vertx.reactive.visitor.interfaces.IRxResponseVisitor;
+import com.samples.vertx.reactive.visitor.interfaces.RxResponseVisitor;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
 
 @RestController()
@@ -18,10 +18,10 @@ public class MarketDataController {
 	private MarketDataService marketDataService;
 	
 	@Autowired
-	private IRxResponseVisitor<HistoricalTicker> marketDataGetResponseVisitor;
+	private RxResponseVisitor<HistoricalTicker> marketDataGetResponseVisitor;
 	
 	@Autowired
-	private IRxResponseVisitor<HistoricalTicker> marketDataAddResponseVisitor;
+	private RxResponseVisitor<HistoricalTicker> marketDataAddResponseVisitor;
 
 	//Post is used so this can be secured via spring oauth2
 	@PostMapping("/market-data")
