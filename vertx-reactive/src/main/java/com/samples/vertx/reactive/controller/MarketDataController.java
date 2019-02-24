@@ -15,7 +15,7 @@ import com.samples.vertx.reactive.visitor.model.RxResponse;
 @RestController()
 public class MarketDataController {
 	@Autowired
-	private MarketDataService marketDataService;
+	private MarketDataService<HistoricalTicker> marketDataService;
 	
 	@Autowired
 	private RxResponseVisitor<HistoricalTicker> marketDataGetResponseVisitor;
@@ -35,7 +35,8 @@ public class MarketDataController {
 	//Post is used so this can be secured via spring oauth2
 	@PostMapping("/market-data/get/{id}")
 	public ResponseEntity<Object> getMarketData(@PathVariable String id){
-		RxResponse<HistoricalTicker> marketDataResponse = marketDataService.getMarketData(id);
+		RxResponse<HistoricalTicker> marketDataResponse = 
+				marketDataService.getMarketData(id, HistoricalTicker.class);
 		marketDataResponse.accept(marketDataGetResponseVisitor);
 		
 		return marketDataResponse.getResponseEntity();
