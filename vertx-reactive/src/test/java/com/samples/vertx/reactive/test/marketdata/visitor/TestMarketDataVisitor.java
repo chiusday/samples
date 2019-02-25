@@ -3,8 +3,6 @@ package com.samples.vertx.reactive.test.marketdata.visitor;
 import static com.samples.vertx.reactive.test.helper.DataBuilder.createHistoricalQuote;
 import static com.samples.vertx.reactive.test.helper.DataBuilder.createHistoricalQuotes;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
