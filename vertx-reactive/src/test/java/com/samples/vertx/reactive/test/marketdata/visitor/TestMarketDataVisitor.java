@@ -18,7 +18,8 @@ import com.samples.vertx.enums.DBOperations;
 import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.AppConfig;
 import com.samples.vertx.reactive.verticle.DataAccessInterchange;
-import com.samples.vertx.reactive.visitor.HistoricalTickerBatchAddResponseVisitor;
+import com.samples.vertx.reactive.visitor.MarketDataBatchAddResponseVisitor;
+import com.samples.vertx.reactive.visitor.AsyncMarketDataBatchAddRxResponseVisitor;
 import com.samples.vertx.reactive.visitor.HistoricalTickersVisitor;
 import com.samples.vertx.reactive.visitor.MarketDataAddResponseVisitor;
 import com.samples.vertx.reactive.visitor.interfaces.BatchRxResponseVisitor;
@@ -41,7 +42,10 @@ public class TestMarketDataVisitor {
 	private HistoricalTickersVisitor historicalTickersVisitor;
 	
 	@Autowired
-	private HistoricalTickerBatchAddResponseVisitor historicalTickerBatchAdd;
+	private MarketDataBatchAddResponseVisitor<HistoricalTicker> marketDataBatchAddResponseVisitor;
+	
+	@Autowired
+	private AsyncMarketDataBatchAddRxResponseVisitor<HistoricalTicker> asyncHistoricalTickerBatchAdd;
 	
 	@Autowired
 	private DataAccessInterchange dataAccessInterchange;
@@ -81,8 +85,21 @@ public class TestMarketDataVisitor {
 	@Test
 	public void testHistoricalTickerBatchAddResponseVisitor() {
 		BatchRxResponse<HistoricalTicker> response = 
-				testBatchAddResponseVisitor(historicalTickerBatchAdd);
+				testBatchAddResponseVisitor(marketDataBatchAddResponseVisitor);
 		
+		Assert.assertEquals(HttpStatus.CREATED, response.getResponseEntity().getStatusCode());
+		Assert.assertFalse(response.isHasError());
+	}
+	
+	@Test
+	public void testAsyncMarketDataBatchAddRxResponseVisitor() {
+		BatchRxResponse<HistoricalTicker> response = 
+				testBatchAddResponseVisitor(asyncHistoricalTickerBatchAdd);
+
+		//Async batch insert is still executing
+		Assert.assertNull(response.getResponseEntity());
+		while (response.getResponseEntity() == null) {}
+		//Async batch insert is done.
 		Assert.assertEquals(HttpStatus.CREATED, response.getResponseEntity().getStatusCode());
 		Assert.assertFalse(response.isHasError());
 	}

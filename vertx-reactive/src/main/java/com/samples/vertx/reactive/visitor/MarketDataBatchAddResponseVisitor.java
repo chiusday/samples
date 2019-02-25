@@ -8,19 +8,26 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import com.samples.market.model.HistoricalTicker;
+import com.samples.market.model.Ticker;
 import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.visitor.interfaces.BatchRxResponseVisitor;
 
+/***
+ * Base class for market data batch add reactive response visitor. This can used with
+ * it's default implementations or be extended for customized/specific features.
+ * @author chiusday
+ *
+ * @param <T> Ticker or any of it's subclasses
+ */
 @Component
-public class HistoricalTickerBatchAddResponseVisitor 
-		extends BatchRxResponseVisitor<HistoricalTicker> {
+public class MarketDataBatchAddResponseVisitor<T extends Ticker> 
+		extends BatchRxResponseVisitor<T> {
 	
 	@Value("${message.failed.internal-error.ins}")
-	private String errorMessage;
+	protected String errorMessage;
 	
 	@Value("${message.success.ins}")
-	private String successMessage;
+	protected String successMessage;
 	
 	protected HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 	protected String currentMessage = successMessage;
@@ -36,7 +43,7 @@ public class HistoricalTickerBatchAddResponseVisitor
 	}
 
 	@Override
-	public ResponseEntity<Object> getResponseEntity(DataAccessMessage<HistoricalTicker> daMessage) {
+	public ResponseEntity<Object> getResponseEntity(DataAccessMessage<T> daMessage) {
 		return new ResponseEntity<>(
 					getBatchResult(daMessage).size()==0
 						? getResultText()
@@ -46,7 +53,7 @@ public class HistoricalTickerBatchAddResponseVisitor
 	}
 
 	@Override
-	protected List<Integer> getBatchResult(DataAccessMessage<HistoricalTicker> daMessage) {
+	protected List<Integer> getBatchResult(DataAccessMessage<T> daMessage) {
 		if (daMessage.getFailure() != null && daMessage.getFailure().getMap() != null) {
 			this.currentMessage = this.errorMessage;
 			this.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
