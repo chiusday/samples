@@ -1,9 +1,7 @@
 package com.samples.common.visitor.model;
 
-import java.lang.reflect.Type;
-
 public abstract class BaseVisitorModel<T> {
-	protected Type type;
+//	protected Type type;
 	protected T model;
 	protected boolean hasError;
 	protected String message;
