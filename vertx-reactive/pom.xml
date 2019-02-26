@@ -19,7 +19,7 @@
   	
   	<dependencies>
   		<dependency>
-			<groupId>com.samples-common</groupId>
+			<groupId>com.samples.common</groupId>
 			<artifactId>samples-common-visitor</artifactId>
   			<version>${samples-common.version}</version>
   		</dependency>
