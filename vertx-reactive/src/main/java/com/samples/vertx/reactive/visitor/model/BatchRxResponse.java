@@ -3,8 +3,9 @@ package com.samples.vertx.reactive.visitor.model;
 import java.util.List;
 
 import com.samples.vertx.reactive.visitor.interfaces.IVisitor;
+import com.samples.vertx.reactive.visitor.interfaces.IVisitorModel;
 
-public class BatchRxResponse<T> extends BaseVisitorModelRxResp<T> {
+public class BatchRxResponse<T> extends BaseVisitorModelRxResp<T> implements IVisitorModel<T>{
 	private List<Integer> batchResult;
 
 	public List<Integer> getBatchResult() {

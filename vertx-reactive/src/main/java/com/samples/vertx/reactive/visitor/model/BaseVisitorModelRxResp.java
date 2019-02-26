@@ -1,5 +1,7 @@
 package com.samples.vertx.reactive.visitor.model;
 
+import com.samples.common.visitor.model.BaseVisitorModelResp;
+
 import io.reactivex.Single;
 import io.vertx.core.json.JsonObject;
 import io.vertx.reactivex.core.eventbus.Message;

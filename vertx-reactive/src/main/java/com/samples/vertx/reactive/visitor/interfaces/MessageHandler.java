@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 
+import com.samples.common.visitor.model.BaseVisitorModelResp;
 import com.samples.vertx.model.DataAccessMessage;
-import com.samples.vertx.reactive.visitor.model.BaseVisitorModelResp;
 
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
