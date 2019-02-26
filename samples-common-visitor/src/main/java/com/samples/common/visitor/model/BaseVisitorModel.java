@@ -1,10 +1,8 @@
-package com.samples.vertx.reactive.visitor.model;
+package com.samples.common.visitor.model;
 
 import java.lang.reflect.Type;
 
-import com.samples.vertx.reactive.visitor.interfaces.IVisitorModel;
-
-public abstract class BaseVisitorModel<T> implements IVisitorModel<T> {
+public abstract class BaseVisitorModel<T> {
 	protected Type type;
 	protected T model;
 	protected boolean hasError;
