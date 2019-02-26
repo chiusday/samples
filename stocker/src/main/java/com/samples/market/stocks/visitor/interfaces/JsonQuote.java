@@ -1,25 +1,27 @@
-package com.samples.market.stocks.visitor.model;
+package com.samples.market.stocks.visitor.interfaces;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.samples.market.model.HistoricalTicker;
-import com.samples.market.stocks.visitor.interfaces.IVisitor;
-import com.samples.market.stocks.visitor.interfaces.iVisitorModel;
+import com.samples.common.visitor.model.BaseVisitorModelResp;
+import com.samples.market.model.Ticker;
 
 import io.vertx.core.json.JsonObject;
 
-public class JsonQuote implements iVisitorModel {
-
+public abstract class JsonQuote<T extends Ticker> extends BaseVisitorModelResp<T>
+		implements iVisitorModel {
+	
+	protected Class<T> type;
 	protected String symbol;
 	protected JsonObject data;
 	protected JsonObject quote;
 	protected Set<String> fields;
-	protected List<HistoricalTicker> historicalQuotes;
+	protected List<T> historicalQuotes;
 	
-	public JsonQuote() {
+	public JsonQuote(Class<T> type) {
+		this.type = type;
 		this.data = new JsonObject();
 		this.quote = new JsonObject();
 		this.fields = new HashSet<>();
@@ -28,6 +30,8 @@ public class JsonQuote implements iVisitorModel {
 		this.fields.add("high");
 		this.fields.add("low");
 	}
+	
+	public Class<T> getType() { return this.type; }
 	
 	public String getSymbol() {
 		return symbol;
@@ -60,11 +64,11 @@ public class JsonQuote implements iVisitorModel {
 		this.quote = quote;
 	}
 
-	public List<HistoricalTicker> getHistoricalQuotes() {
+	public List<T> getQuotes() {
 		return historicalQuotes;
 	}
 
-	public void setHistoricalQuotes(List<HistoricalTicker> historicalQuotes) {
+	public void setQuotes(List<T> historicalQuotes) {
 		this.historicalQuotes = historicalQuotes;
 	}
 
