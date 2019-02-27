@@ -1,6 +1,7 @@
 package com.samples.market.stocks.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.samples.market.model.GetBySymbolRequest;
-import com.samples.market.model.HistoricalTicker;
+import com.samples.market.model.HistoricalTickerList;
 import com.samples.market.stocks.service.HistoricalTickerService;
-import com.samples.market.stocks.visitor.interfaces.JsonQuote;
 
 @RestController
 public class HistoricalTickerController {
@@ -20,11 +20,10 @@ public class HistoricalTickerController {
 	
 	@GetMapping("/stock/list/{id}")
 	public ResponseEntity<Object> getJsonList(@PathVariable String id){
-		JsonQuote<HistoricalTicker> response = 
-				historicalTickerService.getHistoricalQuote(id);
-//		tickers.setTickerList(response.getQuotes());
+		HistoricalTickerList tickers = new HistoricalTickerList();
+		tickers.setTickerList(historicalTickerService.getHistoricalQuote(id));
 		
-		return response.getResponseEntity();
+		return new ResponseEntity<>(tickers, HttpStatus.OK);
 	}
 	
 	@PostMapping("/stock/list")

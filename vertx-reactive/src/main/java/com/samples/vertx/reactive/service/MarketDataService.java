@@ -14,6 +14,7 @@ import com.samples.vertx.reactive.AppConfig;
 import com.samples.vertx.reactive.verticle.DataAccessInterchange;
 import com.samples.vertx.reactive.visitor.interfaces.TickersVisitor;
 import com.samples.vertx.reactive.visitor.model.BaseVisitorModelRxResp;
+import com.samples.vertx.reactive.visitor.model.BatchRxResponse;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
 import com.samples.vertx.reactive.visitor.model.Tickers;
 
@@ -59,7 +60,15 @@ public class MarketDataService<T extends Ticker> {
 		return (RxResponse<T>) processMarketData(tickerMessage,  new RxResponse<T>());
 	}
 	
-	
+	public BatchRxResponse<T> batchAddMarketData(List<T> tickers) {
+		DataAccessMessage<T> tickerMessage =
+				new DataAccessMessage<>(getClazz(tickers.get(0)));
+		tickerMessage.setListJsonArray(getBatchParameters(tickers));
+		tickerMessage.setOperation(DBOperations.batchInsert);
+		
+		return (BatchRxResponse<T>)
+				processMarketData(tickerMessage, new BatchRxResponse<>());
+	}
 	
 	protected BaseVisitorModelRxResp<T> processMarketData(DataAccessMessage<T> tickerMsg, 
 			BaseVisitorModelRxResp<T> marketDataResponse){
