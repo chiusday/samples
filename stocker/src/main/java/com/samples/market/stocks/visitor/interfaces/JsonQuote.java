@@ -5,14 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.samples.common.visitor.model.BaseVisitorModelResp;
 import com.samples.market.model.Ticker;
 
 import io.vertx.core.json.JsonObject;
 
-public abstract class JsonQuote<T extends Ticker> extends BaseVisitorModelResp<T>
-		implements iVisitorModel {
-	
+public abstract class JsonQuote<T extends Ticker> {	
 	protected Class<T> type;
 	protected String symbol;
 	protected JsonObject data;
@@ -70,10 +67,5 @@ public abstract class JsonQuote<T extends Ticker> extends BaseVisitorModelResp<T
 
 	public void setQuotes(List<T> historicalQuotes) {
 		this.historicalQuotes = historicalQuotes;
-	}
-
-	@Override
-	public void accept(IVisitor visitor) {
-		visitor.visit(this);
 	}
 }

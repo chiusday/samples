@@ -1,6 +1,6 @@
 package com.samples.market.stocks.visitor.interfaces;
 
-public interface iVisitorModel {
+public interface iVisitorModel<T> {
 
-	void accept(IVisitor visitor);
+	void accept(IVisitor<T> visitor);
 }

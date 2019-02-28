@@ -1,10 +1,11 @@
-package com.samples.market.model.interfaces;
+package com.samples.market.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TickerList<T> {
+public class TickerList<T> {
 	protected String symbol;
-	protected List<T> tickerList;
+	protected List<T> tickerList = new ArrayList<T>();
 	
 	public TickerList() {}
 	
