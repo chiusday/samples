@@ -1,6 +1,6 @@
 package com.samples.market.model;
 
-public class HistoricalTickerRequestBySymbol {
+public class TickerRequestBySymbol {
 	protected String symbol;
 
 	public String getSymbol() {
