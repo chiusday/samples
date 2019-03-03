@@ -16,8 +16,11 @@ public interface JsonToTickerList<T extends Ticker>
 	@Override
 	default TickerList<T> convertFrom(JsonQuote<T> from) {
 		TickerList<T> tickers = new TickerList<>(from.getSymbol());
+		//for each quote
 		from.getData().forEach(entry -> {
 			JsonObject quote = new JsonObject();
+			//for each element in the quote, create a ticker.
+			//Then add to list to be returned
 			JsonObject.mapFrom(entry.getValue()).getMap().entrySet().forEach(elem -> {
 				from.getFields().forEach(field -> {
 					if (elem.getKey().contains(field)) {

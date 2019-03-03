@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.samples.market.model.HistoricalTicker;
-import com.samples.market.model.HistoricalTickerRequestBySymbol;
+import com.samples.market.model.TickerRequestBySymbol;
 import com.samples.vertx.reactive.service.MarketDataService;
 import com.samples.vertx.reactive.visitor.interfaces.RxResponseVisitor;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
@@ -37,7 +37,7 @@ public class HistoricalTickerController {
 	//Post is used so this can be secured via spring oauth2
 	@PostMapping("/market-data/historical/get")
 	public ResponseEntity<Object> getHistoricalTicker
-			(@RequestBody HistoricalTickerRequestBySymbol request){
+			(@RequestBody TickerRequestBySymbol request){
 		
 		RxResponse<HistoricalTicker> marketDataResponse = marketDataService
 				.getMarketData(request.getSymbol(), HistoricalTicker.class);

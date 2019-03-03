@@ -20,7 +20,7 @@ public class HistoricalTickerController {
 	
 	@GetMapping("/stock/list/{id}")
 	public ResponseEntity<Object> getJsonList(@PathVariable String id){
-		HistoricalTickerList tickers = new HistoricalTickerList();
+		HistoricalTickerList tickers = new HistoricalTickerList(id);
 		tickers.setTickerList(historicalTickerService.getHistoricalQuote(id));
 		
 		return new ResponseEntity<>(tickers, HttpStatus.OK);
