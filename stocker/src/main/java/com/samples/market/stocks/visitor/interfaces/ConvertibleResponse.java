@@ -1,19 +1,19 @@
 package com.samples.market.stocks.visitor.interfaces;
 
-import com.samples.market.model.HistoricalTicker;
 import com.samples.market.stocks.converter.interfaces.IConvertible;
 
+@SuppressWarnings("rawtypes")
 public abstract class ConvertibleResponse<T> extends BaseVisitorModelResp<T> 
 		implements IConvertible {
 
-	protected JsonQuote<HistoricalTicker> jsonQuote;
+	protected JsonQuote convertible;
 	
-	public JsonQuote<HistoricalTicker> getJsonQuote() {
-		return jsonQuote;
+	public JsonQuote getConvertible() {
+		return convertible;
 	}
 
-	public void setJsonQuote(JsonQuote<HistoricalTicker> jsonQuote) {
-		this.jsonQuote = jsonQuote;
+	public void setConvertible(JsonQuote convertible) {
+		this.convertible = convertible;
 	}
 
 	@Override

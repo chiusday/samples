@@ -1,13 +1,14 @@
-package com.samples.market.stocks.service;
+package com.samples.market.stocks.test.visitor;
 
-import java.util.List;
-
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.samples.market.model.HistoricalTicker;
 import com.samples.market.stocks.Statics;
-import com.samples.market.stocks.converter.interfaces.JsonToTickerList;
 import com.samples.market.stocks.interfaces.DataSource;
 import com.samples.market.stocks.visitor.HistoricalTickerListVisitor;
 import com.samples.market.stocks.visitor.interfaces.JsonQuote;
@@ -16,37 +17,22 @@ import com.samples.market.stocks.visitor.model.JsonHistoricalTicker;
 
 import io.vertx.core.json.JsonObject;
 
-@Service
-public class HistoricalTickerService {
+@SpringBootTest
+@RunWith(SpringRunner.class)
+public class TestVisitor {
 	@Autowired
 	private Statics statics;
 
-	//online DataSource
 	@Autowired
 	private DataSource cloudDataSource;
 	
-	//offline DataSource
-//	@Autowired
-//	private DataSource staticDataSource;
-	
-	@Autowired
-	private JsonToTickerList<HistoricalTicker> converter;
-	
 	@Autowired
 	private HistoricalTickerListVisitor visitor;
-
-	public List<HistoricalTicker> getHistoricalQuote(String symbol) {
-		String data = cloudDataSource.getData(symbol);
-//		String data = staticDataSource.getData();
-		JsonObject rawData = new JsonObject(data).getJsonObject
-				(statics.getTimeSeries().getDaily());
-		
-		JsonQuote<HistoricalTicker> jsonQuote = new JsonHistoricalTicker(symbol, rawData);
-		
-		return converter.convertFrom(jsonQuote).getTickerList();
-	}
 	
-	public HistoricalTickerListVisitorModel getHistoricalTickers(String symbol) {
+	private String symbol = "MSFT";
+
+	@Test
+	public void TestHistoricalTickerListVisitor() {
 		String data = cloudDataSource.getData(symbol);
 		JsonObject raw = new JsonObject(data).getJsonObject
 				(statics.getTimeSeries().getDaily());
@@ -56,7 +42,6 @@ public class HistoricalTickerService {
 		hsitoricalTickerVisitorModel.setConvertible(jsonQuote);
 		hsitoricalTickerVisitorModel.accept(visitor);
 		
-		return hsitoricalTickerVisitorModel;
+		Assert.assertFalse(hsitoricalTickerVisitorModel.isHasError());
 	}
-		
 }

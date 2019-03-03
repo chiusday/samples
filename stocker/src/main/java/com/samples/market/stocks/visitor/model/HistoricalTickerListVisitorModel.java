@@ -1,22 +1,27 @@
 package com.samples.market.stocks.visitor.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.samples.market.model.HistoricalTicker;
 import com.samples.market.model.HistoricalTickerList;
 import com.samples.market.stocks.converter.JsonToHistoricalTicker;
-import com.samples.market.stocks.visitor.interfaces.ConvertibleResponse;
 import com.samples.market.stocks.visitor.interfaces.IVisitor;
-import com.samples.market.stocks.visitor.interfaces.JsonQuote;
+import com.samples.market.stocks.visitor.interfaces.JsonQuoteConvertibleResponse;
 
 public class HistoricalTickerListVisitorModel 
-		extends ConvertibleResponse<HistoricalTickerList> {
+		extends JsonQuoteConvertibleResponse<HistoricalTickerList> {
 	
-	@Autowired
 	private JsonToHistoricalTicker converter;
+	
+	public HistoricalTickerListVisitorModel() {
+		converter = new JsonToHistoricalTicker();
+	}
 
 	@Override
 	public JsonToHistoricalTicker getConverter(){
 		return converter;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
 	}
 }

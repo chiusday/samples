@@ -1,4 +1,4 @@
-package com.samples.market.stocks.stocker;
+package com.samples.market.stocks.test;
 
 import static org.junit.Assert.assertFalse;
 

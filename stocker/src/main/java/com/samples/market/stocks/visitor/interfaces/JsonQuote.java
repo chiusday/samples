@@ -1,8 +1,6 @@
 package com.samples.market.stocks.visitor.interfaces;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.samples.market.model.Ticker;
@@ -13,16 +11,16 @@ public abstract class JsonQuote<T extends Ticker> {
 	protected Class<T> type;
 	protected String symbol;
 	protected JsonObject data;
-	protected JsonObject quote;
+//	protected JsonObject quote;
 	protected Set<String> fields;
-	protected List<T> historicalQuotes;
+//	protected List<T> historicalQuotes;
 	
 	public JsonQuote(Class<T> type) {
 		this.type = type;
 		this.data = new JsonObject();
-		this.quote = new JsonObject();
+//		this.quote = new JsonObject();
 		this.fields = new HashSet<>();
-		this.historicalQuotes = new ArrayList<>();
+//		this.historicalQuotes = new ArrayList<>();
 		this.fields.add("open");
 		this.fields.add("high");
 		this.fields.add("low");
@@ -54,18 +52,18 @@ public abstract class JsonQuote<T extends Ticker> {
 		this.fields = fields;
 	}
 
-	public JsonObject getQuote() {
-		return quote;
-	}
-	public void setQuote(JsonObject quote) {
-		this.quote = quote;
-	}
-
-	public List<T> getQuotes() {
-		return historicalQuotes;
-	}
-
-	public void setQuotes(List<T> historicalQuotes) {
-		this.historicalQuotes = historicalQuotes;
-	}
+//	public JsonObject getQuote() {
+//		return quote;
+//	}
+//	public void setQuote(JsonObject quote) {
+//		this.quote = quote;
+//	}
+//
+//	public List<T> getQuotes() {
+//		return historicalQuotes;
+//	}
+//
+//	public void setQuotes(List<T> historicalQuotes) {
+//		this.historicalQuotes = historicalQuotes;
+//	}
 }

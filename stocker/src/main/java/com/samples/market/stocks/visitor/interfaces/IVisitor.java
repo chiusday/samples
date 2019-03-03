@@ -9,8 +9,13 @@ public interface IVisitor<T> {
 			("visit(HistoricalTickerListVisitorModel) is not supported.");
 	}
 
-	default void visit(HistoricalTickerListVisitorModel visitorModel) {
+	default void visit(JsonQuoteConvertibleResponse<T> visitorModel) {
 		throw new UnsupportedOperationException
-			("visit(HistoricalTickerListVisitorModel) is not supported.");
+			("visit(JsonQuoteConvertibleResponse) is not supported.");
+	}
+	
+	default void visit(	HistoricalTickerListVisitorModel visitorModel) {
+		throw new UnsupportedOperationException
+			("visit(JsonQuoteConvertibleResponse) is not supported.");
 	}
 }
