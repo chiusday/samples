@@ -7,7 +7,7 @@ public interface IVisitor<T> {
 
 	default void visit(ConvertibleResponse<T> visitorModel) {
 		throw new UnsupportedOperationException
-			("visit(HistoricalTickerListVisitorModel) is not supported.");
+			("visit(ConvertibleResponse) is not supported.");
 	}
 
 	default void visit(JsonQuoteConvertibleResponse<T> visitorModel) {

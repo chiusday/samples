@@ -4,22 +4,29 @@ import java.util.Map.Entry;
 
 import com.samples.market.model.Ticker;
 import com.samples.market.model.TickerList;
-import com.samples.market.stocks.visitor.interfaces.JsonQuote;
+import com.samples.market.stocks.visitor.interfaces.ConvertibleJsonTicker;
 
 import io.vertx.core.json.JsonObject;
 
+/**
+ * Converter between a ConvertibleJsonTicker<T extends Ticker> and a TickerList of T that
+ * extends Ticker
+ * @author chiusday
+ *
+ * @param <T> - Ticker or it's subclasses
+ */
 public interface JsonToTickerList<T extends Ticker> 
-		extends IConverter<JsonQuote<T>, TickerList<T>> {
+		extends IConverter<ConvertibleJsonTicker<T>, TickerList<T>> {
 
 	void additionalFields(String symbol, JsonObject quote, Entry<String, Object> entry);
 
 	@Override
-	default TickerList<T> convertFrom(JsonQuote<T> from) {
+	default TickerList<T> convertFrom(ConvertibleJsonTicker<T> from) {
 		TickerList<T> tickers = new TickerList<>(from.getSymbol());
 		//for each quote
 		from.getData().forEach(entry -> {
 			JsonObject quote = new JsonObject();
-			//for each element in the quote, create a ticker.
+			//match each element in the quote with the ticker field. 
 			//Then add to list to be returned
 			JsonObject.mapFrom(entry.getValue()).getMap().entrySet().forEach(elem -> {
 				from.getFields().forEach(field -> {
@@ -36,7 +43,7 @@ public interface JsonToTickerList<T extends Ticker>
 	}
 	
 	@Override
-	default JsonQuote<T> convertTo(TickerList<T> to) {
+	default ConvertibleJsonTicker<T> convertTo(TickerList<T> to) {
 		throw new UnsupportedOperationException("convertTo(List<T> is not supported");
 	}
 }

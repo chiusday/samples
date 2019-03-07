@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import com.samples.market.model.HistoricalTicker;
 import com.samples.market.stocks.Statics;
 import com.samples.market.stocks.interfaces.DataSource;
+import com.samples.market.stocks.model.AlphaVantageHistoricalTicker;
 import com.samples.market.stocks.visitor.IntradayTickerListVisitor;
-import com.samples.market.stocks.visitor.interfaces.JsonQuote;
+import com.samples.market.stocks.visitor.interfaces.ConvertibleJsonTicker;
 import com.samples.market.stocks.visitor.model.IntradayTickerListVisitorModel;
-import com.samples.market.stocks.visitor.model.JsonHistoricalTicker;
 
 import io.vertx.core.json.JsonObject;
 
@@ -29,11 +29,12 @@ public class IntradayTickerService {
 		String data = cloudDataSource.getData(id);
 		JsonObject raw = new JsonObject(data).getJsonObject
 				(statics.getTimeSeries().getDaily());
-		JsonQuote<HistoricalTicker> jsonQuote = new JsonHistoricalTicker(id, raw);
+		ConvertibleJsonTicker<HistoricalTicker> convertibleJsonTicker = 
+				new AlphaVantageHistoricalTicker(id, raw);
 
 		IntradayTickerListVisitorModel visitorModel = 
 				new IntradayTickerListVisitorModel();
-		visitorModel.setConvertible(jsonQuote);
+		visitorModel.setConvertibleJsonTicker(convertibleJsonTicker);
 		visitorModel.accept(intradayTickerListVisitor);
 		
 		return visitorModel;

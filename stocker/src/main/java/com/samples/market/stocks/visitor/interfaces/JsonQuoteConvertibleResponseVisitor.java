@@ -2,8 +2,8 @@ package com.samples.market.stocks.visitor.interfaces;
 
 /***
  * State changes before and/or after conversion that are specific to abstracted
- * JsonQuoteC
- * @author jon
+ * JsonQuoteConvertibleResponseModel
+ * @author chiusday
  *
  * @param <T>
  */

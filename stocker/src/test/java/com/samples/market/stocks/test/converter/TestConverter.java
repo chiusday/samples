@@ -9,10 +9,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.samples.market.model.HistoricalTicker;
 import com.samples.market.model.TickerList;
 import com.samples.market.stocks.Statics;
-import com.samples.market.stocks.converter.JsonToHistoricalTicker;
+import com.samples.market.stocks.converter.AlphaVantageJsonToHistoricalTicker;
 import com.samples.market.stocks.interfaces.DataSource;
-import com.samples.market.stocks.visitor.interfaces.JsonQuote;
-import com.samples.market.stocks.visitor.model.JsonHistoricalTicker;
+import com.samples.market.stocks.model.AlphaVantageHistoricalTicker;
+import com.samples.market.stocks.visitor.interfaces.ConvertibleJsonTicker;
 
 import io.vertx.core.json.JsonObject;
 import org.junit.Assert;
@@ -27,7 +27,7 @@ public class TestConverter {
 	private DataSource cloudDataSource;
 
 	@Autowired
-	private JsonToHistoricalTicker converter;
+	private AlphaVantageJsonToHistoricalTicker converter;
 	
 	private String symbol = "MSFT";
 
@@ -37,7 +37,7 @@ public class TestConverter {
 		JsonObject rawData = new JsonObject(data).getJsonObject
 				(statics.getTimeSeries().getDaily());
 		
-		JsonQuote<HistoricalTicker> jsonQuote = new JsonHistoricalTicker(symbol, rawData);
+		ConvertibleJsonTicker<HistoricalTicker> jsonQuote = new AlphaVantageHistoricalTicker(symbol, rawData);
 		TickerList<HistoricalTicker> tickerList = converter.convertFrom(jsonQuote);
 		
 		Assert.assertEquals(symbol, tickerList.getSymbol());

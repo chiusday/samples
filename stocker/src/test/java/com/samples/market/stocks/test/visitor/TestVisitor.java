@@ -8,12 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.samples.market.model.HistoricalTicker;
+import com.samples.market.model.HistoricalTickerList;
+import com.samples.market.model.TickerList;
 import com.samples.market.stocks.Statics;
 import com.samples.market.stocks.interfaces.DataSource;
+import com.samples.market.stocks.model.AlphaVantageHistoricalTicker;
 import com.samples.market.stocks.visitor.HistoricalTickerListVisitor;
-import com.samples.market.stocks.visitor.interfaces.JsonQuote;
+import com.samples.market.stocks.visitor.interfaces.ConvertibleJsonTicker;
 import com.samples.market.stocks.visitor.model.HistoricalTickerListVisitorModel;
-import com.samples.market.stocks.visitor.model.JsonHistoricalTicker;
 
 import io.vertx.core.json.JsonObject;
 
@@ -36,12 +38,17 @@ public class TestVisitor {
 		String data = cloudDataSource.getData(symbol);
 		JsonObject raw = new JsonObject(data).getJsonObject
 				(statics.getTimeSeries().getDaily());
-		JsonQuote<HistoricalTicker> jsonQuote = new JsonHistoricalTicker(symbol, raw);
-		HistoricalTickerListVisitorModel hsitoricalTickerVisitorModel = 
+		ConvertibleJsonTicker<HistoricalTicker> jsonQuote = new AlphaVantageHistoricalTicker(symbol, raw);
+		HistoricalTickerListVisitorModel historicalTickerVisitorModel = 
 				new HistoricalTickerListVisitorModel();
-		hsitoricalTickerVisitorModel.setConvertible(jsonQuote);
-		hsitoricalTickerVisitorModel.accept(visitor);
+		historicalTickerVisitorModel.setConvertibleJsonTicker(jsonQuote);
+		historicalTickerVisitorModel.accept(visitor);
+		@SuppressWarnings("unchecked")
+		TickerList<HistoricalTicker> tickerList = (TickerList<HistoricalTicker>)
+				historicalTickerVisitorModel.getResponseEntity().getBody();		
+		HistoricalTickerList list = new HistoricalTickerList(tickerList);
 		
-		Assert.assertFalse(hsitoricalTickerVisitorModel.isHasError());
+		Assert.assertFalse(historicalTickerVisitorModel.isHasError());
+		Assert.assertFalse(list.getTickerList().isEmpty());
 	}
 }

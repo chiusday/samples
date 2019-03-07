@@ -1,6 +1,6 @@
 package com.samples.market.stocks.converter.interfaces;
 
-public interface IConvertible {
-	@SuppressWarnings("rawtypes")
-	IConverter getConverter();
+public interface IConvertible<F, T> {
+
+	IConverter<F, T> getConverter();
 }

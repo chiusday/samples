@@ -10,7 +10,7 @@ public abstract class ConvertibleResponseVisitor<T> implements IVisitor<T> {
 		@SuppressWarnings("rawtypes")
 		IConverter converter = convertibleResponse.getConverter();
 		convertibleResponse.setModel((T)converter.convertFrom
-				(convertibleResponse.getConvertible()));
+				(convertibleResponse.getConvertibleJsonTicker()));
 		convertibleResponse.setHasError(false);
 	}
 }

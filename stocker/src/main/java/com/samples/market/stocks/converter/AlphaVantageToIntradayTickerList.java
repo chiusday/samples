@@ -10,7 +10,7 @@ import com.samples.market.stocks.converter.interfaces.JsonToTickerList;
 import io.vertx.core.json.JsonObject;
 
 @Component
-public class JsonToIntradayTickerList implements JsonToTickerList<IntradayTicker> {
+public class AlphaVantageToIntradayTickerList implements JsonToTickerList<IntradayTicker> {
 	
 	@Override
 	public void additionalFields
