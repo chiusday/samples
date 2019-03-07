@@ -1,15 +1,13 @@
 package com.samples.market.model;
 
-import java.time.Instant;
-
 public class IntradayTicker extends Ticker {
-	private Instant time;
+	private String time;
 
-	public Instant getTime() {
+	public String getTime() {
 		return time;
 	}
 
-	public void setTime(Instant time) {
+	public void setTime(String time) {
 		this.time = time;
 	}
 }
