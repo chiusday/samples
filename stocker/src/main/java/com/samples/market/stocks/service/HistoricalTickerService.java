@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.samples.market.model.HistoricalTicker;
 import com.samples.market.stocks.Statics;
-import com.samples.market.stocks.converter.interfaces.JsonToTickerList;
+import com.samples.market.stocks.converter.AlphaVantageJsonToHistoricalTicker;
 import com.samples.market.stocks.interfaces.DataSource;
 import com.samples.market.stocks.model.AlphaVantageHistoricalTicker;
 import com.samples.market.stocks.visitor.HistoricalTickerListVisitor;
@@ -30,7 +30,7 @@ public class HistoricalTickerService {
 //	private DataSource staticDataSource;
 	
 	@Autowired
-	private JsonToTickerList<HistoricalTicker> converter;
+	private AlphaVantageJsonToHistoricalTicker converter;
 	
 	@Autowired
 	private HistoricalTickerListVisitor visitor;
@@ -41,10 +41,10 @@ public class HistoricalTickerService {
 		JsonObject rawData = new JsonObject(data).getJsonObject
 				(statics.getTimeSeries().getDaily());
 		
-		ConvertibleJsonTicker<HistoricalTicker> convertibleJsonTicker = 
+		AlphaVantageHistoricalTicker convertibleJsonTicker = 
 				new AlphaVantageHistoricalTicker(symbol, rawData);
 		
-		return converter.convertFrom(convertibleJsonTicker).getTickerList();
+		return converter.convertFrom(convertibleJsonTicker);
 	}
 	
 	public HistoricalTickerListVisitorModel getHistoricalTickers(String symbol) {

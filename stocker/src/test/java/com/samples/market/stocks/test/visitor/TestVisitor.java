@@ -9,7 +9,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.samples.market.model.HistoricalTicker;
 import com.samples.market.model.HistoricalTickerList;
-import com.samples.market.model.TickerList;
 import com.samples.market.stocks.Statics;
 import com.samples.market.stocks.interfaces.DataSource;
 import com.samples.market.stocks.model.AlphaVantageHistoricalTicker;
@@ -43,12 +42,11 @@ public class TestVisitor {
 				new HistoricalTickerListVisitorModel();
 		historicalTickerVisitorModel.setConvertibleJsonTicker(jsonQuote);
 		historicalTickerVisitorModel.accept(visitor);
-		@SuppressWarnings("unchecked")
-		TickerList<HistoricalTicker> tickerList = (TickerList<HistoricalTicker>)
+		HistoricalTickerList tickerList = (HistoricalTickerList) 
 				historicalTickerVisitorModel.getResponseEntity().getBody();		
-		HistoricalTickerList list = new HistoricalTickerList(tickerList);
+		
 		
 		Assert.assertFalse(historicalTickerVisitorModel.isHasError());
-		Assert.assertFalse(list.getTickerList().isEmpty());
+		Assert.assertFalse(tickerList.isEmpty());
 	}
 }
