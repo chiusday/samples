@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 package com.samples.vertx.reactive.visitor.model;
-=======
-package com.samples.common.visitor.model;
->>>>>>> branch 'master' of https://github.com/chiusday/samples.git
 
 import org.springframework.http.ResponseEntity;
 

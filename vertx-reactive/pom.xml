@@ -22,14 +22,11 @@
   			<groupId>com.samples.common</groupId>
   			<artifactId>samples-common-market</artifactId>
   			<version>0.0.2</version>
-<<<<<<< HEAD
   		</dependency>
   		<dependency>
   			<groupId>com.samples.common</groupId>
   			<artifactId>samples-common-vertx</artifactId>
   			<version>${samples-common.version}</version>
-=======
->>>>>>> branch 'master' of https://github.com/chiusday/samples.git
   		</dependency>
   		<dependency>
 			<groupId>com.jon</groupId>
