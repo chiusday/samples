@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.samples.market.model.HistoricalTicker;
 import com.samples.market.model.TickerRequestBySymbol;
 import com.samples.vertx.reactive.service.MarketDataService;
-import com.samples.vertx.reactive.visitor.interfaces.RxResponseVisitor;
+import com.samples.vertx.reactive.visitor.HistoricalTickerAddResponseVisitor;
+import com.samples.vertx.reactive.visitor.MarketDataGetResponseVisitor;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
 
 @RestController()
@@ -18,17 +19,17 @@ public class HistoricalTickerController {
 	private MarketDataService<HistoricalTicker> marketDataService;
 	
 	@Autowired
-	private RxResponseVisitor<HistoricalTicker> marketDataGetResponseVisitor;
+	private MarketDataGetResponseVisitor<HistoricalTicker> getResponseVisitor;
 	
 	@Autowired
-	private RxResponseVisitor<HistoricalTicker> marketDataAddResponseVisitor;
+	private HistoricalTickerAddResponseVisitor addResponseVisitor;
 
 	@PostMapping("/market-data/historical")
 	public ResponseEntity<Object> addHistoricalTicjer
 			(@RequestBody HistoricalTicker ticker){
 		
 		RxResponse<HistoricalTicker> marketDataResponse = marketDataService.addMarketData(ticker);
-		marketDataResponse.accept(marketDataAddResponseVisitor);
+		marketDataResponse.accept(addResponseVisitor);
 		
 		return marketDataResponse.getResponseEntity();
 	}
@@ -40,7 +41,7 @@ public class HistoricalTickerController {
 		
 		RxResponse<HistoricalTicker> marketDataResponse = marketDataService
 				.getMarketData(request.getSymbol(), HistoricalTicker.class);
-		marketDataResponse.accept(marketDataGetResponseVisitor);
+		marketDataResponse.accept(getResponseVisitor);
 		
 		return marketDataResponse.getResponseEntity();
 	}
