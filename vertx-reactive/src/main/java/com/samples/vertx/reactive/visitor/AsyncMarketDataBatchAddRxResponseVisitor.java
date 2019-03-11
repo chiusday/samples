@@ -7,13 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.samples.market.model.Ticker;
+import com.samples.vertx.reactive.visitor.interfaces.BatchAddRxResponseVisitor;
 import com.samples.vertx.reactive.visitor.model.BatchRxResponse;
 
 import io.vertx.core.json.Json;
 
 @Component
 public class AsyncMarketDataBatchAddRxResponseVisitor<T extends Ticker> 
-		extends MarketDataBatchAddResponseVisitor<T> {
+		extends BatchAddRxResponseVisitor<T> {
 	
 	private Logger log = LoggerFactory.getLogger
 			(AsyncMarketDataBatchAddRxResponseVisitor.class);

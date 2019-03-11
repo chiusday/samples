@@ -5,13 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
-import com.samples.common.visitor.model.BaseVisitorModelResp;
 import com.samples.market.model.Ticker;
 import com.samples.vertx.reactive.interfaces.WebMarketdataConsumer;
 import com.samples.vertx.reactive.visitor.AsyncMarketDataBatchAddRxResponseVisitor;
+import com.samples.vertx.reactive.visitor.model.BaseVisitorModelResp;
 import com.samples.vertx.reactive.visitor.model.BatchRxResponse;
 
+@Service
 public class WebMarketDataService<T extends Ticker> {
 	@Value("${stocker.url}")
 	private String sourceUrl;

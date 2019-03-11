@@ -2,8 +2,6 @@ package com.samples.vertx.reactive.visitor.interfaces;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
@@ -23,7 +21,7 @@ public abstract class RxResponseVisitor<T> extends MessageHandler<T>
 	
 	@Override
 	public void visit(RxResponse<T> rxResponse) {
-		try {
+//		try { replaced by Global exception handler
 			Message<JsonObject> message = rxResponse.getSingle().blockingGet();
 			this.handle(message, rxResponse);
 			if (!rxResponse.isHasError()) {
@@ -31,11 +29,11 @@ public abstract class RxResponseVisitor<T> extends MessageHandler<T>
 				log.info(getResultText()+"\n"+ (rxResponse.getModel() == null ? "{}" :
 					Json.encodePrettily(rxResponse.getModel())));
 			}
-		} catch (Exception e) {
-			rxResponse.setHasError(true);
-			rxResponse.setResponseEntity(new ResponseEntity<Object>
-				(getErrorText(), HttpStatus.INTERNAL_SERVER_ERROR));
-			log.error(getResultText()+"\n"+e);
-		}
+//		} catch (Exception e) {
+//			rxResponse.setHasError(true);
+//			rxResponse.setResponseEntity(new ResponseEntity<Object>
+//				(getErrorText(), HttpStatus.INTERNAL_SERVER_ERROR));
+//			log.error(getResultText()+"\n"+e);
+//		}
 	}
 }

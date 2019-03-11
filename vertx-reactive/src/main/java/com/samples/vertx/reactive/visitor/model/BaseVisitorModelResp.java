@@ -1,4 +1,4 @@
-package com.samples.common.visitor.model;
+package com.samples.vertx.reactive.visitor.model;
 
 import org.springframework.http.ResponseEntity;
 

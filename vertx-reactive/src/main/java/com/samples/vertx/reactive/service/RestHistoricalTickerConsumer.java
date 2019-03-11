@@ -24,7 +24,7 @@ public class RestHistoricalTickerConsumer implements WebMarketdataConsumer<Histo
 		HistoricalTickerList tickers = 
 				restTemplate.getForObject(url, HistoricalTickerList.class, symbol);
 		
-		return tickers.getTickerList();
+		return tickers;
 	}
 	
 	@Override
@@ -35,6 +35,6 @@ public class RestHistoricalTickerConsumer implements WebMarketdataConsumer<Histo
 		HistoricalTickerList tickers = 
 				restTemplate.postForObject(sourceUrl, request, HistoricalTickerList.class);
 		
-		return tickers.getTickerList();
+		return tickers;
 	}
 }

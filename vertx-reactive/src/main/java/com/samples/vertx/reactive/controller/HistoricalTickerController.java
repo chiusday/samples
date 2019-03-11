@@ -23,7 +23,6 @@ public class HistoricalTickerController {
 	@Autowired
 	private RxResponseVisitor<HistoricalTicker> marketDataAddResponseVisitor;
 
-	//Post is used so this can be secured via spring oauth2
 	@PostMapping("/market-data/historical")
 	public ResponseEntity<Object> addHistoricalTicjer
 			(@RequestBody HistoricalTicker ticker){

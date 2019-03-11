@@ -22,7 +22,7 @@ db-config:
   driver_class: org.h2.Driver
 
 stocker:
-  url: http://localhost:40401/stocker/stock/list
+  url: http://localhost:40401/stocker/stock/list/
   
 message:
   failed:
