@@ -29,8 +29,8 @@ public class TestWebMarketDataService {
 	
 	@Test
 	public void testGetWebMarketData() {
-		List<HistoricalTicker> tickers = webHistoricalTickerSource.getWebMarketData
-				(symbol, webConsumer);
+		List<HistoricalTicker> tickers = webHistoricalTickerSource
+				.getWebMarketDataThenAdd(symbol, webConsumer);
 		Assert.assertFalse(tickers.isEmpty());
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -24,24 +25,28 @@ public class WebMarketDataService<T extends Ticker> {
 	@Autowired
 	private AsyncMarketDataBatchAddRxResponseVisitor<T> asyncBatchAddRespVisitor;
 	
-	public List<T> getWebMarketData(String symbol, WebMarketdataConsumer<T> webConsumer) {
+	public ResponseEntity<Object> getWebMarketDataAsEntity(String symbol,
+			WebMarketdataConsumer<T> webConsumer) {
+		
+		List<T> tickers = getWebMarketDataThenAdd(symbol, webConsumer);
+		return new ResponseEntity<Object>(tickers, HttpStatus.OK);
+	}
+	
+	/***
+	 * Retrieve List of Market Data from web then add to DB.
+	 * @param symbol - Ticker symbol
+	 * @param webConsumer - WebMarketdataConsumer for this Ticker
+	 * @return List of Tickers from web
+	 */
+	public List<T> getWebMarketDataThenAdd(String symbol, 
+			WebMarketdataConsumer<T> webConsumer) {
+		
 		List<T> tickers = webConsumer.getTickerList(symbol);
 		//batch add the list to DB Asynchronously
 		asyncBatchAddMarketData(tickers);
 		//return the market data that corresponds to 'symbol' while a number of data are
 		//being saved in the DB concurrently
-		return tickers;
-	}
-	
-	public ResponseEntity<Object> getWebMarketDataAsEntity(String symbol,
-			WebMarketdataConsumer<T> webConsumer) {
-		
-		List<T> tickers = webConsumer.getTickerList(symbol);
-		//batch add the list to DB Asynchronously
-		BaseVisitorModelResp<T> response = asyncBatchAddMarketData(tickers);
-		//return the market data that corresponds to 'symbol' while a number of data are
-		//being saved in the DB concurrently
-		return response.getResponseEntity();
+		return tickers;		
 	}
 	
 	private BaseVisitorModelResp<T> asyncBatchAddMarketData(List<T> tickers){
