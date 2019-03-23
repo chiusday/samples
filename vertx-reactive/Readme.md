@@ -1,5 +1,8 @@
 # vertx-reactive
-This project is a reactive version of the vertx project multiple-tables in this same repo.
-Not all Async Handlers are converted to reactive though. Most of the core abstracts and interfaces are just reused since their logic and functionality remains solid even now that I'm converting the services to be reactive.
+This is a reactive version of multiple-tables project.
+An API that returns stock prices based on the supplied ticker symbol. Internally, it will check if the price being queried is in it's database, if it is, then the prices are returned. Otherwise, it will call the [stocker](https://github.com/chiusday/samples/tree/master/stocker) API to pull the prices from sources (online/offline) that is transparent to vertx-reactive, then save it in DB **asynchrously**, at the same time data is returned to the caller.
 
-Also, vertx web is replaced with spring web just so this can be used as the business service for the cloud and oauth2 repository projects.
+Data is stored, therefore this is more suitable to do analytics and other data manipulations as compatered to [stocker](https://github.com/chiusday/samples/tree/master/stocker)
+
+## Overview:
+![](src/main/resources/images/vertx-reactiveOverview.png)
