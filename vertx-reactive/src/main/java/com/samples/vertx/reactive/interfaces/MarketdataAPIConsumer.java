@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.samples.market.model.Ticker;
 
-public interface WebMarketdataConsumer<T extends Ticker> {
+public interface MarketdataAPIConsumer<T extends Ticker> {
 
 	/***
 	 * Get a Ticker from a web service based on the ticker symbol/id

@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.samples.market.model.Ticker;
-import com.samples.vertx.reactive.interfaces.WebMarketdataConsumer;
+import com.samples.vertx.reactive.interfaces.MarketdataAPIConsumer;
 import com.samples.vertx.reactive.visitor.AsyncMarketDataBatchAddRxResponseVisitor;
 import com.samples.vertx.reactive.visitor.model.BaseVisitorModelResp;
 import com.samples.vertx.reactive.visitor.model.BatchRxResponse;
@@ -26,7 +26,7 @@ public class WebMarketDataService<T extends Ticker> {
 	private AsyncMarketDataBatchAddRxResponseVisitor<T> asyncBatchAddRespVisitor;
 	
 	public ResponseEntity<Object> getWebMarketDataAsEntity(String symbol,
-			WebMarketdataConsumer<T> webConsumer) {
+			MarketdataAPIConsumer<T> webConsumer) {
 		
 		List<T> tickers = getWebMarketDataThenAdd(symbol, webConsumer);
 		return new ResponseEntity<Object>(tickers, HttpStatus.OK);
@@ -39,7 +39,7 @@ public class WebMarketDataService<T extends Ticker> {
 	 * @return List of Tickers from web
 	 */
 	public List<T> getWebMarketDataThenAdd(String symbol, 
-			WebMarketdataConsumer<T> webConsumer) {
+			MarketdataAPIConsumer<T> webConsumer) {
 		
 		List<T> tickers = webConsumer.getTickerList(symbol);
 		//batch add the list to DB Asynchronously

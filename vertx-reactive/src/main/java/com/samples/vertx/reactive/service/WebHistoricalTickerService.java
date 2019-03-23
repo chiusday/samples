@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.samples.market.model.HistoricalTicker;
-import com.samples.vertx.reactive.interfaces.WebMarketdataConsumer;
+import com.samples.vertx.reactive.interfaces.MarketdataAPIConsumer;
 
 @Service
 public class WebHistoricalTickerService extends WebMarketDataService<HistoricalTicker> {
 
 	public ResponseEntity<Object> getWebMarketDataAsEntity(String symbol, String priceDate,
-			WebMarketdataConsumer<HistoricalTicker> webConsumer) {
+			MarketdataAPIConsumer<HistoricalTicker> webConsumer) {
 		
 		List<HistoricalTicker> tickers = getWebMarketDataThenAdd(symbol, webConsumer);
 		HistoricalTicker historicalTikcer = tickers.stream().filter(ticker -> 

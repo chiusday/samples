@@ -9,10 +9,10 @@ import org.springframework.web.client.RestTemplate;
 import com.samples.market.model.GetBySymbolRequest;
 import com.samples.market.model.HistoricalTicker;
 import com.samples.market.model.HistoricalTickerList;
-import com.samples.vertx.reactive.interfaces.WebMarketdataConsumer;
+import com.samples.vertx.reactive.interfaces.MarketdataAPIConsumer;
 
 @Service
-public class RestHistoricalTickerConsumer implements WebMarketdataConsumer<HistoricalTicker> {
+public class RestHistoricalTickerConsumer implements MarketdataAPIConsumer<HistoricalTicker> {
 
 	@Value("${stocker.url}")
 	private String sourceUrl;
