@@ -12,10 +12,10 @@ import com.samples.market.stocks.model.AlphaVantageHistoricalTicker;
 import io.vertx.core.json.JsonObject;
 
 @Service
-public class AlphaVantageJsonToHistoricalTicker extends JsonToTickerList
+public class AlphaVantageToHistoricalTickerList extends JsonToTickerList
 		<HistoricalTicker, AlphaVantageHistoricalTicker, HistoricalTickerList> {
 	
-	public AlphaVantageJsonToHistoricalTicker() {
+	public AlphaVantageToHistoricalTickerList() {
 		super(AlphaVantageHistoricalTicker.class, HistoricalTickerList.class);
 	}
 
