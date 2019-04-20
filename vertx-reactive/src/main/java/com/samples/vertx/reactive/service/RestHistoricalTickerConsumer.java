@@ -14,7 +14,7 @@ import com.samples.vertx.reactive.interfaces.MarketdataAPIConsumer;
 @Service
 public class RestHistoricalTickerConsumer implements MarketdataAPIConsumer<HistoricalTicker> {
 
-	@Value("${stocker.url}")
+	@Value("${stocker.url.historical}")
 	private String sourceUrl;
 	
 	@Override

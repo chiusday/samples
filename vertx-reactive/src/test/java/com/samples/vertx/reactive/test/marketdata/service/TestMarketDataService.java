@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.samples.market.model.HistoricalTicker;
-import com.samples.vertx.reactive.service.MarketDataService;
+import com.samples.vertx.reactive.service.HistoricalTickerService;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
 
 @SpringBootTest
@@ -20,7 +20,8 @@ import com.samples.vertx.reactive.visitor.model.RxResponse;
 public class TestMarketDataService {
 
 	@Autowired
-	private MarketDataService<HistoricalTicker> historicalMarketDataService;
+//	private MarketDataService<HistoricalTicker> historicalMarketDataService;
+	private HistoricalTickerService historicalMarketDataService;
 	
 	@Test
 	public void testAddHistoricalTicker() {

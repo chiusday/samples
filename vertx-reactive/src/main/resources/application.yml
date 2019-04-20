@@ -22,7 +22,10 @@ db-config:
   driver_class: org.h2.Driver
 
 stocker:
-  url: http://localhost:40401/stocker/stock/list/
+  url: 
+    historical: http://localhost:40401/stocker/stock/list/
+    intraday: http://localhost:40401/stocker/intraday/
+  
   
 message:
   failed:
