@@ -1,13 +1,13 @@
 package com.samples.market.model;
 
 public class IntradayTicker extends Ticker {
-	private String time;
+	private String priceTime;
 
-	public String getTime() {
-		return time;
+	public String getPriceTime() {
+		return priceTime;
 	}
 
-	public void setTime(String time) {
-		this.time = time;
+	public void setPriceTime(String time) {
+		this.priceTime = time;
 	}
 }

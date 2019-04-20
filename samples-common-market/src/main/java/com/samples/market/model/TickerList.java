@@ -2,8 +2,8 @@ package com.samples.market.model;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("serial")
 public class TickerList<E> extends ArrayList<E> {
+	private static final long serialVersionUID = 4037202515467050501L;
 	protected String symbol;
 	
 	public TickerList() {}
