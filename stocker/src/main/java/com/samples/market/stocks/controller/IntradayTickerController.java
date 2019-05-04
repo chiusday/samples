@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.samples.market.model.TickerRequestBySymbol;
 import com.samples.market.stocks.service.IntradayTickerService;
-import com.samples.market.stocks.visitor.model.HistoricalTickerListVisitorModel;
 import com.samples.market.stocks.visitor.model.IntradayTickerListVisitorModel;
 
 @RestController
