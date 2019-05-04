@@ -17,7 +17,7 @@ public class HistoricalTickerController {
 	@Autowired
 	private HistoricalTickerService historicalTickerService;
 	
-	@GetMapping("/stock/list/{id}")
+	@GetMapping("/stock/historical/{id}")
 	public ResponseEntity<Object> getJsonList(@PathVariable String id){
 		HistoricalTickerListVisitorModel historicalTickerVisitorModel = 
 				historicalTickerService.getHistoricalTickers(id); 
@@ -25,7 +25,7 @@ public class HistoricalTickerController {
 		return historicalTickerVisitorModel.getResponseEntity();
 	}
 	
-	@PostMapping("/stock/list")
+	@PostMapping("/stock/historical/list")
 	public ResponseEntity<Object> getJson(@RequestBody GetBySymbolRequest request){
 		return getJsonList(request.getSymbol());
 	}
