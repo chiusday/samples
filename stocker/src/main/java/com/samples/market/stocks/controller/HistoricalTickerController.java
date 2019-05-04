@@ -25,7 +25,7 @@ public class HistoricalTickerController {
 		return historicalTickerVisitorModel.getResponseEntity();
 	}
 	
-	@PostMapping("/stock/historical/list")
+	@PostMapping("/stock/historical")
 	public ResponseEntity<Object> getJson(@RequestBody GetBySymbolRequest request){
 		return getJsonList(request.getSymbol());
 	}
