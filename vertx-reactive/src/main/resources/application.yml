@@ -23,8 +23,8 @@ db-config:
 
 stocker:
   url: 
-    historical: http://localhost:40401/stocker/stock/list/
-    intraday: http://localhost:40401/stocker/intraday/
+    historical: http://localhost:40401/stocker/stock/historical/
+    intraday: http://localhost:40401/stocker/stock/intraday/
   
   
 message:

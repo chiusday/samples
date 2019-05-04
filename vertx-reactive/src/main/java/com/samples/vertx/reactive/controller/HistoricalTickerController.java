@@ -18,12 +18,6 @@ import com.samples.vertx.reactive.visitor.model.RxResponse;
 
 @RestController()
 public class HistoricalTickerController {
-//		extends BaseController<HistoricalTicker> {
-	
-//	public HistoricalTickerController() {
-//		super(HistoricalTicker.class);
-//	}
-
 	@Autowired
 	private HistoricalTickerService histTickService;
 	
@@ -34,19 +28,10 @@ public class HistoricalTickerController {
 	private MarketDataGetResponseVisitor<HistoricalTicker> historicalGetVisitor;
 	
 	@Autowired 
-//	private WebMarketDataService<HistoricalTicker> historicalWeb;
 	private WebHistoricalTickerService historicalWebSourceService;
 	
 	@Autowired
 	private MarketdataAPIConsumer<HistoricalTicker> webConsumer;
-
-//	@Override
-//	public void setBeans() {
-//		this.marketDataService = new MarketDataService<>(historicalTickersVisitor);
-//		this.addResponseVisitor = historicalAddVisitor;
-//		this.getResponseVisitor = historicalGetVisitor;
-//		this.webMarketDataService = new WebMarketData;
-//	}
 
 	@PostMapping("/market-data/historical")
 	public ResponseEntity<Object> addHistoricalTicker
@@ -77,47 +62,4 @@ public class HistoricalTickerController {
 		return marketDataResponse.getResponseEntity();
 	}
 
-//	@Autowired
-//	private HistoricalTickerService marketDataService;
-//	
-//	@Autowired
-//	private HistoricalTickerGetResponseVisitor getResponseVisitor;
-//	
-//	@Autowired
-//	private HistoricalTickerAddResponseVisitor addResponseVisitor;
-//	
-//	@Autowired
-//	private WebHistoricalTickerService webMarketDataService;
-//	
-//	@Autowired
-//	private RestHistoricalTickerConsumer webConsumer;
-//
-//	@PostMapping("/market-data/historical")
-//	public ResponseEntity<Object> addHistoricalTicker
-//			(@RequestBody HistoricalTicker ticker){
-//		
-//		HistoricalTickerRxResponse marketDataResponse = 
-//				(HistoricalTickerRxResponse) marketDataService.addMarketData(ticker);
-//		marketDataResponse.accept(addResponseVisitor);
-//		
-//		return marketDataResponse.getResponseEntity();
-//	}
-//
-//	//Post is used so this can be secured via spring oauth2
-//	@PostMapping("/market-data/historical/get")
-//	public ResponseEntity<Object> getHistoricalTicker
-//			(@RequestBody TickerRequestBySymbol request){
-//		
-//		HistoricalTickerRxResponse marketDataResponse = 
-//				(HistoricalTickerRxResponse) marketDataService.getMarketData
-//				(request.getSymbol(), HistoricalTicker.class);
-//		try {
-//			marketDataResponse.accept(getResponseVisitor);
-//		} catch (DataNotFoundException dnfEx) {
-//			return webMarketDataService.getWebMarketDataAsEntity(
-//					request.getSymbol(), webConsumer);
-//		}
-//		
-//		return marketDataResponse.getResponseEntity();
-//	}	
 }

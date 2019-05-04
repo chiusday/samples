@@ -48,7 +48,7 @@ public abstract class MarketDataRestConsumer<T extends Ticker, L extends TickerL
 		try {
 			tickers = restTemplate.postForObject(sourceUrl, request, lClass);
 		} catch (Exception e) {
-			log.error("Error getting ticker list from {} -> {}", sourceUrl, 
+			log.error("Error posting for ticker list from {} -> {}", sourceUrl, 
 					Json.encodePrettily(request), e);
 		}
 		

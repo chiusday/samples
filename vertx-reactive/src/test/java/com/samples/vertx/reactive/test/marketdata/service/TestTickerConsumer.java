@@ -14,53 +14,38 @@ import com.samples.market.model.HistoricalTicker;
 import com.samples.market.model.IntradayTicker;
 import com.samples.vertx.reactive.service.HistoricalRestConsumer;
 import com.samples.vertx.reactive.service.IntradayRestConsumer;
-import com.samples.vertx.reactive.service.WebHistoricalTickerService;
-import com.samples.vertx.reactive.service.WebIntradayTickerService;
 
 @SpringBootTest
 @WebAppConfiguration
 @RunWith(SpringRunner.class)
-public class TestWebMarketDataService {
-
-	@Autowired
-	private WebHistoricalTickerService webHistoricalTickerSource;
-	
-	@Autowired 
-	private WebIntradayTickerService webIntradayTickerService;
-	
+public class TestTickerConsumer {
 	@Autowired
 	private HistoricalRestConsumer historicalRestConsumer;
 	
 	@Autowired
 	private IntradayRestConsumer intradayRestConsumer;
 	
-	private String symbol = "MSFT";
-	
 	@Test
-	public void testGetWebHistoricalTicker() {
-		List<HistoricalTicker> tickers = webHistoricalTickerSource
-				.getWebMarketDataThenAdd(symbol, historicalRestConsumer);
+	public void TestGetHistoricalTickerList() {
+		List<HistoricalTicker> tickers = historicalRestConsumer.getTickerList("MSFT");
 		Assert.assertFalse(tickers.isEmpty());
 	}
 	
 	@Test
-	public void testPostWebHistoricalTicker() {
-		List<HistoricalTicker> tickers = webHistoricalTickerSource
-				.postMarketDataThenAdd(symbol, historicalRestConsumer);
+	public void TestPostForHistoricalTickerList() {
+		List<HistoricalTicker> tickers = historicalRestConsumer.postForTickerList("MSFT");
 		Assert.assertFalse(tickers.isEmpty());
 	}
 
 	@Test
-	public void testGetWebIntradayTicker() {
-		List<IntradayTicker> tickers = webIntradayTickerService
-				.getWebMarketDataThenAdd(symbol, intradayRestConsumer);
+	public void TestGetIntradayTickerList() {
+		List<IntradayTicker> tickers = intradayRestConsumer.getTickerList("MSFT");
 		Assert.assertFalse(tickers.isEmpty());
 	}
 	
 	@Test
-	public void testPostWebIntradayTicker() {
-		List<IntradayTicker> tickers = webIntradayTickerService
-				.postMarketDataThenAdd(symbol, intradayRestConsumer);
+	public void TestPostForIntradayTickerList() {
+		List<IntradayTicker> tickers = intradayRestConsumer.postForTickerList("MSFT");
 		Assert.assertFalse(tickers.isEmpty());
 	}
 }
