@@ -30,7 +30,12 @@ public abstract class MarketDataRestConsumer<T extends Ticker, L extends TickerL
 	public List<T> getTickerList(String symbol){
 		String url = sourceUrl + symbol;
 		RestTemplate restTemplate = new RestTemplate();
-		L tickers = restTemplate.getForObject(url, lClass, symbol);
+		L tickers = null;
+		try {
+			tickers = restTemplate.getForObject(url, lClass, symbol);
+		} catch(Exception e) {
+			log.error("Error getting ticker list from {}", sourceUrl, e);
+		}
 		
 		return tickers;
 	}
@@ -44,7 +49,7 @@ public abstract class MarketDataRestConsumer<T extends Ticker, L extends TickerL
 			tickers = restTemplate.postForObject(sourceUrl, request, lClass);
 		} catch (Exception e) {
 			log.error("Error getting ticker list from {} -> {}", sourceUrl, 
-					Json.encodePrettily(request));
+					Json.encodePrettily(request), e);
 		}
 		
 		return tickers;

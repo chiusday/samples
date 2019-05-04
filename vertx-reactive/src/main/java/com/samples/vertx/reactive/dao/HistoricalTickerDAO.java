@@ -1,22 +1,15 @@
 package com.samples.vertx.reactive.dao;
 
-import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 import com.samples.market.model.HistoricalTicker;
-import com.samples.vertx.model.DataAccessMessage;
 import com.samples.vertx.reactive.DBConfig;
-import com.samples.vertx.reactive.interfaces.VertxSQLDataAccess;
+import com.samples.vertx.reactive.interfaces.TickerVertxSQLDataAccess;
 
 import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
-import io.vertx.reactivex.core.eventbus.Message;
 
 @Service
-public class HistoricalTickerDAO extends VertxSQLDataAccess<HistoricalTicker> {
-//	private Logger log = LoggerFactory.getLogger(HistoricalTickerDAO.class);
-
+public class HistoricalTickerDAO extends TickerVertxSQLDataAccess<HistoricalTicker> {
 	public HistoricalTickerDAO(DBConfig config) {
 		super(HistoricalTicker.class, config);
 	}
@@ -48,6 +41,13 @@ public class HistoricalTickerDAO extends VertxSQLDataAccess<HistoricalTicker> {
 			+" low DECIMAL(11,4), price_date Date)";	
 	}
 
+	@Override
+	protected String getUpdateSql(String keyValue) {
+		return "UPDATE "+getTableName()+" SET "
+				+ "open=?, close=?, high=?, low=? "
+				+ "WHERE symbol="+keyValue;
+	}
+
 	//Since this is latency sensitive, JsonObject.mapFrom will not be used
 	//because the benefit is not worth the processing speed cost.
 	@Override
@@ -59,69 +59,5 @@ public class HistoricalTickerDAO extends VertxSQLDataAccess<HistoricalTicker> {
 				.add(ticker.getHigh())
 				.add(ticker.getLow())
 				.add(ticker.getPriceDate());
-	}
-	
-	@Override
-	public void insert(Message<JsonObject> message) {
-		DataAccessMessage<HistoricalTicker> tickerMessage = new DataAccessMessage<>(message.body());
-		HistoricalTicker ticker = tickerMessage.getModel();
-		insert(ticker, next -> {
-			if (isTransactionFailed(next, tickerMessage) == false){
-				tickerMessage.setModel(next.result());
-			}
-			message.reply(JsonObject.mapFrom(tickerMessage));
-		});
-	}
-	
-	@Override
-	public void batchInsert(Message<JsonObject> message) {
-		DataAccessMessage<HistoricalTicker> tickerMessage = new DataAccessMessage<>(message.body());
-		List<JsonArray> batchParams = tickerMessage.getListJsonArray();
-		batchInsert(batchParams, next -> {
-			if (isTransactionFailed(next, tickerMessage) == false) {
-				tickerMessage.setBatchResult(next.result());
-			}
-			message.reply(JsonObject.mapFrom(tickerMessage));			
-		});
-	}
-
-	@Override
-	public void select(Message<JsonObject> message) {
-		DataAccessMessage<HistoricalTicker> tickerMessage = new DataAccessMessage<>(message.body());
-		select(tickerMessage.getCriteria(), tickerMessage.getParameters(), next -> {
-			if (isTransactionFailed(next, tickerMessage) == false){
-				tickerMessage.setRecords(next.result());
-			}
-			message.reply(JsonObject.mapFrom(tickerMessage));
-		});
-	}
-
-	@Override
-	public void update(Message<JsonObject> message) {
-		DataAccessMessage<HistoricalTicker> msgTicker = new DataAccessMessage<>(message.body());
-		msgTicker.setKey(msgTicker.getModel().getSymbol());
-		String sql = "UPDATE "+getTableName()+" SET "
-				+ "open=?, close=?, high=?, low=? "
-				+ "WHERE symbol="+msgTicker.getKey();
-		update(msgTicker.getKey(), sql, msgTicker.getModel(), next -> {
-			if (isTransactionFailed(next, msgTicker) == false) {
-				msgTicker.setModel(next.result());
-			}
-			message.reply(JsonObject.mapFrom(msgTicker));
-		});
-	}
-	
-	@Override
-	public void delete(Message<JsonObject> message) {
-		DataAccessMessage<HistoricalTicker> msgTicker = new DataAccessMessage<>(message.body());
-		msgTicker.setCriteria("symbol="+msgTicker.getModel().getSymbol());
-		
-		delete(msgTicker.getCriteria(), new JsonArray().add(msgTicker.getModel().getSymbol()), 
-			next -> {
-				if (isTransactionFailed(next, msgTicker) == false) {
-					msgTicker.setAffectedRecords(next.result());
-				}
-				message.reply(JsonObject.mapFrom(msgTicker));
-			});
 	}
 }

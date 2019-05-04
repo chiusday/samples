@@ -23,7 +23,7 @@ public class IntradayTickerDAO extends TickerVertxSQLDataAccess<IntradayTicker> 
 	protected String getInsertSql() {
 		return "INSERT INTO " + getTableName()
 			+ " (symbol, open, close, high, low, price_time)"
-			+ " VALUES (?, ?, ?, ?, ?, ?)";
+			+ " VALUES (?, ?, ?, ?, ?, parsedatetime(?, 'yyyy-MM-dd hh:mm:ss'))";
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class IntradayTickerDAO extends TickerVertxSQLDataAccess<IntradayTicker> 
 		return "CREATE TABLE IF NOT EXISTS " + getTableName()
 			+" (id IDENTITY NOT NULL PRIMARY KEY, symbol VARCHAR(64),"
 			+" open DECIMAL(11,4), close DECIMAL(11,4), high DECIMAL(11,4),"
-			+" low DECIMAL(11,4), price_time Date)";	
+			+" low DECIMAL(11,4), price_time TIMESTAMP)";	
 	}
 
 
@@ -44,13 +44,15 @@ public class IntradayTickerDAO extends TickerVertxSQLDataAccess<IntradayTicker> 
 
 	@Override
 	public JsonArray noKeyJsonArray(IntradayTicker model) {
-		return new JsonArray()
-				.add(model.getSymbol())
-				.add(model.getOpen())
-				.add(model.getClose())
-				.add(model.getHigh())
-				.add(model.getLow())
-				.add(model.getPriceTime());		
+		JsonArray reply = new JsonArray();
+		if (model.getSymbol()!=null) reply.add(model.getSymbol());
+		reply.add(model.getOpen());
+		reply.add(model.getClose());
+		reply.add(model.getHigh());
+		reply.add(model.getLow());
+		if (model.getPriceTime()!=null) reply.add(model.getPriceTime());
+
+		return reply;
 	}
 
 	@Override

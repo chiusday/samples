@@ -11,7 +11,7 @@ import com.samples.market.model.IntradayTicker;
 import com.samples.market.model.TickerRequestBySymbol;
 import com.samples.vertx.reactive.interfaces.MarketdataAPIConsumer;
 import com.samples.vertx.reactive.service.MarketDataService;
-import com.samples.vertx.reactive.service.WebMarketDataService;
+import com.samples.vertx.reactive.service.WebIntradayTickerService;
 import com.samples.vertx.reactive.visitor.MarketDataAddResponseVisitor;
 import com.samples.vertx.reactive.visitor.MarketDataGetResponseVisitor;
 import com.samples.vertx.reactive.visitor.model.RxResponse;
@@ -28,22 +28,23 @@ public class IntradayTickerController {
 	private MarketDataGetResponseVisitor<IntradayTicker> getResponseVisitor;
 	
 	@Autowired 
-	private WebMarketDataService<IntradayTicker> webMarketDataService;
+	private WebIntradayTickerService webMarketDataService;
 	
 	@Autowired
 	private MarketdataAPIConsumer<IntradayTicker> webConsumer;
 
-	@PostMapping("/market-data/intraday")
+	@PostMapping("/market-data/intraday/add")
 	public ResponseEntity<Object> addIntradayTicker
 			(@RequestBody IntradayTicker ticker) {
 		
-		RxResponse<IntradayTicker> marketDataResponse = marketDataService.addMarketData(ticker);
+		RxResponse<IntradayTicker> marketDataResponse = 
+				marketDataService.addMarketData(ticker);
 		marketDataResponse.accept(addResponseVisitor);
 		
 		return marketDataResponse.getResponseEntity();
 	}
 	
-	@PostMapping("market-data/intraday/get")
+	@PostMapping("market-data/intraday")
 	public ResponseEntity<Object> getIntradayTicker
 			(@RequestBody TickerRequestBySymbol request) {
 		
@@ -53,7 +54,8 @@ public class IntradayTickerController {
 		try {
 			marketDataResponse.accept(getResponseVisitor);
 		} catch (DataNotFoundException dnfEx) {
-			return webMarketDataService.getWebMarketDataAsEntity(request.getSymbol(), webConsumer);
+			return webMarketDataService.postWebMarketDataAsEntity
+					(request.getSymbol(), webConsumer);
 		}
 		
 		return marketDataResponse.getResponseEntity();

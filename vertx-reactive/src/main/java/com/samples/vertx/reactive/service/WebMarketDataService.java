@@ -50,6 +50,13 @@ public abstract class WebMarketDataService<T extends Ticker> {
 		return tickers;		
 	}
 	
+	public ResponseEntity<Object> postWebMarketDataAsEntity(String symbol,
+			MarketdataAPIConsumer<T> webConsumer) {
+		
+		List<T> tickers = postMarketDataThenAdd(symbol, webConsumer);
+		return new ResponseEntity<Object>(tickers, HttpStatus.OK);
+	}
+	
 	public List<T> postMarketDataThenAdd(String symbol, 
 			MarketdataAPIConsumer<T> webConsumer) {
 		

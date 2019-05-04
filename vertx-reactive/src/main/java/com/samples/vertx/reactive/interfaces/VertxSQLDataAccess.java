@@ -2,6 +2,7 @@ package com.samples.vertx.reactive.interfaces;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,10 +45,6 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 	protected abstract String getInsertSql();
 	protected abstract String getCreateSql();
 
-	public Class<T> getType(){
-		return this.type;
-	}
-	
 	/**
 	 *  
 	 *  Returns io.vertx.core.json.JsonArray containing all the fields of the model.
@@ -58,6 +55,10 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 	
 	public abstract  JsonArray noKeyJsonArray(T model); 
 
+	public Class<T> getType(){
+		return this.type;
+	}
+	
 	@Override
 	public void executeCreate() {
 		this.jdbc.rxGetConnection()
@@ -174,14 +175,19 @@ public abstract class VertxSQLDataAccess<T> implements IVertxSQLDataAccess<T> {
 		});
 	}
 
-	public void select(String criteria, JsonArray parameters, Handler<AsyncResult<List<JsonObject>>> next) {
+	public void select(String criteria, JsonArray parameters, Handler<AsyncResult<List<T>>> next) {
 		this.jdbc.getConnection(asyncConn -> {
 			SQLConnection connection = asyncConn.result();
 			connection.queryWithParams(SELECT_PREFIX + criteria, parameters, result -> {
 				if (result.failed()){
 					next.handle(Future.failedFuture(result.cause()));
 				} else {
-					next.handle(Future.succeededFuture(result.result().getRows()));
+					next.handle(Future.succeededFuture(
+							result.result().getRows().parallelStream()
+								.map(json -> json.mapTo(getType()))
+								.collect(Collectors.toList())
+							));
+//					next.handle(Future.succeededFuture(result.result().getRows()));
 				}
 				connection.close();
 			});

@@ -63,13 +63,15 @@ public class HistoricalTickerController {
 	public ResponseEntity<Object> getHistoricalTicker
 			(@RequestBody TickerRequestBySymbol request) {
 		
-		RxResponse<HistoricalTicker> marketDataResponse = (RxResponse<HistoricalTicker>) histTickService
+		RxResponse<HistoricalTicker> marketDataResponse = 
+				(RxResponse<HistoricalTicker>) histTickService
 				.getMarketData(request.getSymbol(), HistoricalTicker.class);
 		
 		try {
 			marketDataResponse.accept(historicalGetVisitor);
 		} catch (DataNotFoundException dnfEx) {
-			return historicalWebSourceService.getWebMarketDataAsEntity(request.getSymbol(), webConsumer);
+			return historicalWebSourceService.getWebMarketDataAsEntity
+					(request.getSymbol(), webConsumer);
 		}
 		
 		return marketDataResponse.getResponseEntity();
