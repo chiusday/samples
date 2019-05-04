@@ -1,6 +1,8 @@
 package com.samples.vertx.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.samples.vertx.enums.DBOperations;
 
@@ -21,7 +23,7 @@ public class DataAccessMessage<T> {
 	private List<Integer> batchResult;
 	private JsonArray parameters;
 	private JsonArray outParameters;
-	private List<JsonObject> records;
+	private List<T> records;
 	private List<JsonArray> listJsonArray;
 	private ResultSet storedProcResult;
 	private DBOperations operation;
@@ -41,6 +43,11 @@ public class DataAccessMessage<T> {
 	
 	@SuppressWarnings("unchecked")
 	public DataAccessMessage(JsonObject json){
+		try{
+			this.type = (Class<T>) Class.forName(json.getString("type"));
+		} catch (ClassNotFoundException classNotFound){
+			System.out.println("Error casting data type.\n" + classNotFound.getStackTrace());
+		}
 		this.key = json.getString("key");
 		this.criteria = json.getString("criteria");
 		this.affectedRecords = json.getInteger("affectedRecords");
@@ -48,17 +55,14 @@ public class DataAccessMessage<T> {
 				: json.getJsonArray("batchResult").getList();
 		this.parameters = json.getJsonArray("parameters");
 		this.outParameters = json.getJsonArray("outParameters");
-		this.records = json.getValue("records")==null ? null : json.getJsonArray("records").getList();
+		System.out.println("printing out json.getValue(\"records\") -> "+json.getValue("records"));
+		this.records = json.getValue("records")==null ? null 
+				: toListModel(json.getJsonArray("records"));
 		this.listJsonArray = json.getJsonArray("listJsonArray")==null ? null : 
 			json.getJsonArray("listJsonArray").getList();
 		this.storedProcResult = (ResultSet)json.getValue("storedProcResult");
 		this.operation = DBOperations.valueOf(json.getString("operation"));
 		this.failure = JsonObject.mapFrom(json.getJsonObject("failure"));
-		try{
-			this.type = (Class<T>) Class.forName(json.getString("type"));
-		} catch (ClassNotFoundException classNotFound){
-			System.out.println("Error casting data type.\n" + classNotFound.getStackTrace());
-		}
 		setModel(
 				(json.getValue("model") != null) ? json.getJsonObject("model").mapTo(type) : null
 			);
@@ -125,9 +129,9 @@ public class DataAccessMessage<T> {
 	 * @return
 	 * 	ResultSet returned by executing the DBOperation
 	 */
-	public List<JsonObject> getRecords(){ return this.records; }
+	public List<T> getRecords(){ return this.records; }
 	@SuppressWarnings("unchecked")
-	public void setRecords(List<JsonObject> records){
+	public void setRecords(List<T> records){
 		this.records = records; 
 		if (!records.isEmpty()) {
 			this.setModel((T)records.get(0));
@@ -170,4 +174,14 @@ public class DataAccessMessage<T> {
 		this.failure = failure;
 	}
 
+	private List<T> toListModel(JsonArray records){
+		return records.stream().map(rec -> ((JsonObject)rec).mapTo(type))
+				.collect(Collectors.toList());
+//		List<T> reply = new ArrayList<T>();
+//		for(Object record : records) {
+//			JsonObject rec = (JsonObject)record;
+//			reply.add(rec.mapTo(type));
+//		}
+//		return reply;
+	}
 }
