@@ -1,11 +1,35 @@
 package com.samples.market.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+
 public class Ticker extends TickerBase {
+	@JsonAlias("ID")
+	private int id;
+	@JsonAlias("SYMBOL")
+	protected String symbol;
+	@JsonAlias("OPEN")
 	protected double open;
+	@JsonAlias("CLOSE")
 	protected double close;
+	@JsonAlias("HIGH")
 	protected double high;
+	@JsonAlias("LOW")
 	protected double low;
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getSymbol() {
+		return symbol;
+	}
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
+	}
 	public double getOpen() {
 		return open;
 	}
