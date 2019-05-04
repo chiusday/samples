@@ -1,6 +1,5 @@
 package com.samples.vertx.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -130,7 +129,6 @@ public class DataAccessMessage<T> {
 	 * 	ResultSet returned by executing the DBOperation
 	 */
 	public List<T> getRecords(){ return this.records; }
-	@SuppressWarnings("unchecked")
 	public void setRecords(List<T> records){
 		this.records = records; 
 		if (!records.isEmpty()) {
