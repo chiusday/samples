@@ -3,3 +3,6 @@
 *.DS_Store
 *.metadata
 *.settings
+.idea/
+*.iml
+
